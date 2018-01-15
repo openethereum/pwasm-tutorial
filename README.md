@@ -32,7 +32,7 @@ wasm-build --target wasm32-unknown-unknown ./target token // "token" is the name
 
 `wasm-build` will look for compiled Wasm under the `./target/wasm32-unknown-unknown` dir and put the final wasm into the `./target/token.wasm`.
 
-In order to successfully build the final deployable contract Wasm module should contain 2 exports: `call` and `deploy` (see https://github.com/paritytech/pwasm-token-example/blob/master/src/token.rs). The `call` export used to call methods on the deployed contract while `deploy` should contain the initialization code. `wasm-build` optimise contact over `call`, puts it's binary code it into static data segment, renames `deploy` export to `call` and makes it return a pointer to and length of that static data segment.
+In order to successfully build the final deployable contract Wasm module should contain 2 exports: `call` and `deploy` (see https://github.com/paritytech/pwasm-token-example/blob/master/src/token.rs). The `call` export used to call methods on the deployed contract while `deploy` should contain the initialization code. `wasm-build` optimise contact over `call`, puts its binary code into the static data segment, renames `deploy` export to `call` and makes it return a pointer to and length of that static data segment.
 
 ## Deployment
 
