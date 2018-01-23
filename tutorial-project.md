@@ -2,7 +2,7 @@
 There is a list of all tools and dependencies required for this tutorial.
 
 ### Rust
-[rustup](https://github.com/rust-lang-nursery/rustup.rs#installation) is the easiest way to install rust toolchain. We need to install rustc nightly since our contracts require some unstable features:
+[rustup](https://github.com/rust-lang-nursery/rustup.rs#installation) is the easiest way to install Rust toolchains. Rust nightly toolchain is required since our contracts require some unstable features:
 ```
 rustup install nightly
 ```
