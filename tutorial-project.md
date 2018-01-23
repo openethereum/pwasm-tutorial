@@ -7,7 +7,7 @@ There is a list of all tools and dependencies required for this tutorial.
 rustup install nightly
 ```
 
-Also we need to install wasm32-unknown-unknown to compile contract to Wasm:
+Also we need to install `wasm32-unknown-unknown` to compile contract to Wasm:
 ```
 rustup target add wasm32-unknown-unknown --toolchain nightly
 ```
@@ -23,7 +23,7 @@ https://github.com/paritytech/parity
 Parity 1.10 // TODO: installation
 
 ### Tutorial source code
-We provide a full source code for each step in this tutorial under step-* directories.
+We provide a full source code for each step in this tutorial under `step-*` directories.
 
 ## General structure
 
@@ -106,18 +106,15 @@ TokenContract is an interface definition of a contract.
 eth_abi macro parses an interface (trait) definition of a contact and generates
 two structs: `Endpoint` and `Client`.
 
-`Endpoint` is an entry point for contract calls. Endpoint implements the EndpointInterface with 2 methods
-eth_abi macro generates a table of Method IDs corresponding with every method signature defined in the trait
+`Endpoint` is an entry point for contract calls. `Endpoint` implements the `EndpointInterface` with 2 methods
+`eth_abi` macro generates a table of Method IDs corresponding with every method signature defined in the trait
 and defines it statically in the generated code.
-Scroll down at "pub fn call(desc: *mut u8)" to see how.
-Endpoint instantiates with a struct TokenContractInstance which implements the TokenContract trait definition.
+`Endpoint` instantiates with a struct `TokenContractInstance` which implements the `TokenContract` trait definition.
 
 `Client` is a struct which is useful for call generation to a deployed contract. For example:
 ```rust
-	let mut client = Client::new(contactAddress);
-	let balance = client
-		.value(someValue) // you can attach some value for a call optionally
-		.balanceOf(someAddress);
+let mut client = Client::new(contactAddress);
+let balance = client.value(someValue) // you can attach some value for a call optionally.balanceOf(someAddress);
 ```
 Will generate a Solidity-compatible call for the contract, deployed on `contactAddress`.
 Then it invokes pwasm_std::ext::call on `contactAddress` and returns the result.
