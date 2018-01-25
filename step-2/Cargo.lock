@@ -50,7 +50,7 @@ dependencies = [
 [[package]]
 name = "pwasm-abi"
 version = "0.1.0"
-source = "git+https://github.com/paritytech/pwasm-abi#78e531a6c0dffba901e337810ae1defdcc50c087"
+source = "git+https://github.com/paritytech/pwasm-abi#dd2d168af461f8723ffdce992abca1558d634e74"
 dependencies = [
  "bigint 4.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "byteorder 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -61,7 +61,7 @@ dependencies = [
 [[package]]
 name = "pwasm-abi-derive"
 version = "0.1.0"
-source = "git+https://github.com/paritytech/pwasm-abi#78e531a6c0dffba901e337810ae1defdcc50c087"
+source = "git+https://github.com/paritytech/pwasm-abi#dd2d168af461f8723ffdce992abca1558d634e74"
 dependencies = [
  "byteorder 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "parity-hash 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
