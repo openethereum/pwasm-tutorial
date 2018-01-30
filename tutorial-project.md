@@ -422,16 +422,28 @@ Starting from version 1.8 Parity includes support for running Wasm contracts. Wa
         "0000000000000000000000000000000000000002": { "balance": "1", "builtin": { "name": "sha256", "pricing": { "linear": { "base": 60, "word": 12 } } } },
         "0000000000000000000000000000000000000003": { "balance": "1", "builtin": { "name": "ripemd160", "pricing": { "linear": { "base": 600, "word": 120 } } } },
         "0000000000000000000000000000000000000004": { "balance": "1", "builtin": { "name": "identity", "pricing": { "linear": { "base": 15, "word": 3 } } } },
-        "0x00a329c0648769a73afac7f9381e08fb43dbea72": { "balance": "1606938044258990275541962092341162602522202993782792835301376" }
+        "0x004ec07d2329997267ec62b4166639513386f32e": { "balance": "1606938044258990275541962092341162602522202993782792835301376" }
     }
 }
 
 ```
 Run Parity:
-```
+```bash
 parity --chain ./wasm-dev-chain.json --jsonrpc-apis=all
 ```
-Open a separate terminal window, cd to `step-4` and build contract:
+Leave it run in the separate terminal window.
+
+Among with other things we've added an account `0x004ec07d2329997267ec62b4166639513386f32e` with some ETH to `wasm-dev-chain.json` on which behalf we'll run transactions. Now we need to add this account to the local keychain:
+
+```bash
+curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user", "user"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8545
+```
+Should output something like:
+```
+{"jsonrpc":"2.0","result":"0x004ec07d2329997267ec62b4166639513386f32e","id":0}
+```
+
+Now cd to `step-4` and build contract:
 ```bash
 cargo build --release --target wasm32-unknown-unknown
 wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract
@@ -440,12 +452,12 @@ It should produce 2 files:
 - a compiled Wasm binary `./target/pwasm_tutorial_contract.wasm`
 - an ABI file: `./target/json/TokenContract.json`
 
-Now you can use Web.js to connect to the Parity node and deploy Wasm `pwasm_tutorial_contract.wasm`:
+At this point we can use Web.js to connect to the Parity node and deploy Wasm `pwasm_tutorial_contract.wasm`:
 
 ```javascript
     var Web3 = require("web3");
     var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-    web3.eth.defaultAccount = "0x00a329c0648769a73afac7f9381e08fb43dbea72";
+    web3.eth.defaultAccount = "0x004ec07d2329997267ec62b4166639513386f32e";
 
     var abi = JSON.parse(fs.readFileSync("./target/json/TokenContract.json")); // read JSON ABI
     var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").toString('hex'); // convert Wasm binary to hex format
