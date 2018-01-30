@@ -448,7 +448,7 @@ Now cd to `step-4` and build contract:
 cargo build --release --target wasm32-unknown-unknown
 wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract
 ```
-It should produce 2 files:
+It should produce 2 files we need:
 - a compiled Wasm binary `./target/pwasm_tutorial_contract.wasm`
 - an ABI file: `./target/json/TokenContract.json`
 
