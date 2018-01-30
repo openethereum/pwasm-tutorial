@@ -378,7 +378,6 @@ var Web3 = require("web3");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
 var TokenContract = new web3.eth.Contract(abi, "0xe1EDa226759825E236001714bcDc0ca0B21fd800", { from: web3.eth.defaultAccount });
-var event = TokenContract.Transfer({valueA: 23} [, additionalFilterObject])
 
 // Subscribe to the Transfer event
 TokenContract.events.Transfer({
