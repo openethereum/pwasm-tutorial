@@ -3,12 +3,14 @@ There is a list of all tools and dependencies required for this tutorial.
 
 ### Rust
 [rustup](https://github.com/rust-lang-nursery/rustup.rs#installation) is the easiest way to install Rust toolchains. Rust nightly toolchain is required since our contracts require some unstable features:
-```
+
+```bash
 rustup install nightly
 ```
 
 Also we need to install `wasm32-unknown-unknown` to compile contract to Wasm:
-```
+
+```bash
 rustup target add wasm32-unknown-unknown --toolchain nightly
 ```
 
@@ -19,13 +21,16 @@ cargo install --git https://github.com/paritytech/wasm-utils wasm-build
 ```
 
 ### Parity
-https://github.com/paritytech/parity
-Parity 1.10 // TODO: installation
+Follow this guide https://github.com/paritytech/parity/wiki/Setup
+
+### Web3.js
+Follow this guide https://github.com/ethereum/web3.js/#installation
 
 ### Tutorial source code
 We provide a full source code for each step in this tutorial under `step-*` directories.
 
 ## General structure
+Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-0
 
 ```rust
 // Contract doesn't use Rust's standard library
@@ -55,16 +60,18 @@ pub fn call(desc: *mut u8) {
 ```
 ## Building
 To make sure that everything is setup go to the `step-0` directory and run:
-```
+
+```bash
 cargo build --release --target wasm32-unknown-unknown
 wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract
 ```
 As the result the `pwasm_tutorial_contract.wasm` should be placed under the `step-0/target` directory.
 
 ## The constructor
+Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-1
+
 When deploying a contract we often want to setup its initial storage. To solve this problem we are exporting another function "deploy" which executes only once on contract deployment.
 
-https://github.com/fckt/pwasm-tutorial-project/tree/step-1/src
 ```rust
 /// This contract will return the address from which it was deployed
 
@@ -82,12 +89,12 @@ use pwasm_std::hash::H256;
 #[no_mangle]
 pub fn deploy(desc: *mut u8) {
     let (args, result) = unsafe { pwasm_std::parse_args(desc) };
-    // Lets set the sender address to the contract storage at address "0"
+    // Lets set the sender address to the contract storage
     pwasm_ethereum::storage::write(&H256::zero().into(), &H256::from(pwasm_ethereum::ext::sender()).into());
-    // Note we should't write any result into the call descriptor in deploy.
+    // Note we shouldn't write any result into the call descriptor in deploy.
 }
 
-// The following code will be stored on the blockchain.
+// The following function will be the main function of the deployed contract
 #[no_mangle]
 pub fn call(desc: *mut u8) {
     // pwasm_std::parse_args splits the call descriptor into arguments and result pointers
@@ -100,6 +107,7 @@ pub fn call(desc: *mut u8) {
 ```
 
 ## Contract ABI declaration
+Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-2
 Let's implement a simple [ERC-20](https://en.wikipedia.org/wiki/ERC20) token contract.
 
 ```rust
@@ -187,7 +195,9 @@ The `dispatch` expects `payload` and returns result in format defined in [Solidi
 A compete implementation of ERC20 can be found here https://github.com/paritytech/pwasm-token-example.
 
 ## Make calls to other contracts
-In order to make calls to our `TokenContract` we need to generate the payload `TokenEndpoint` expects. So `pwasm_abi_derive::eth_abi` can generate a client for the contract.
+Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-3
+
+In order to make calls to our `TokenContract` we need to generate the payload `TokenEndpoint::dispatch()` expects. So `pwasm_abi_derive::eth_abi` can generate an implementation of `TokenContract` which will prepare payload for each method.
 
 ```rust
 #[eth_abi(TokenEndpoint, TokenClient)]
@@ -195,10 +205,12 @@ In order to make calls to our `TokenContract` we need to generate the payload `T
 		/// The constructor
         fn constructor(&mut self, _total_supply: U256);
         /// Total amount of tokens
+        #[constant] // #[constant] hint affect the resulting JSON abi. It sets "constant": true prore
         fn totalSupply(&mut self) -> U256;
     }
 ```
-We have added a second argument `TokenClient` to the `eth_abi` macro, so this way we ask to generate a client implementation for TokenContract and name it as `TokenClient`. So for example if we've deployed our `TokenContract` on the chain at address `0xe1EDa226759825E236001714bcDc0ca0B21fd800` we can use `TokenClient` as following:
+
+We've added a second argument `TokenClient` to the `eth_abi` macro, so this way we ask to generate a client implementation for `TokenContract` trait and name it as `TokenClient`. Let's suppose we've deployed a token contract on `0xe1EDa226759825E236001714bcDc0ca0B21fd800` address. That's how we can make calls to it.
 
 ```rust
 extern pwasm_ethereum;
@@ -215,18 +227,231 @@ let tokenSupply = token.totalSupply();
 
 ```rust
 let token = TokenClient::new(Address::from("0xe1EDa226759825E236001714bcDc0ca0B21fd800"))
-	.value(10000000.into())
-	.gas(21000);
+	.value(10000000.into()) // send a value with the call
+	.gas(21000); // set a gas limit
 let tokenSupply = token.totalSupply();
 ```
 
-This is an example on how one contract call another:
-https://github.com/paritytech/pwasm-repo-contract/blob/50d3acf04e99b33b66773ee84226885d4621d631/contract/src/lib.rs#L262-L273
+If you move to `step-3` directory and run `cargo build --release --target wasm32-unknown-unknown` you will find a `TokenContract.json` in the `target/json` generated from `TokenContract` trait with the following content:
 
-## Building
+```json
+[
+  {
+    "type": "function",
+    "name": "totalSupply",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "returnValue",
+        "type": "uint256"
+      }
+    ],
+    "constant": true
+  },
+  {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "_total_supply",
+        "type": "uint256"
+      }
+    ]
+  }
+]
+```
 
-### Transactions
+That JSON is an ABI definition which can be used along with Web.js to run transactions and calls to contract:
+
+```javascript
+var Web3 = require("web3");
+var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
+var TokenContract = new web3.eth.Contract(abi, "0xe1EDa226759825E236001714bcDc0ca0B21fd800", { from: web3.eth.defaultAccount });
+var totalSupply = TokenContract.methods.totalSupply();
+```
 
 ### Events
+Source code: https://github.com/fckt/pwasm-tutorial/tree/master/master/step-4
+
+Events allow the convenient usage of the EVM logging facilities, which in turn can be used to “call” JavaScript callbacks in the user interface of a dapp, which listen for these events.
+
+Let's implement the `transfer` method for our ERC-20 contract. Move to `step-4` directory to see the complete implementation.
+
+```rust
+pub mod token {
+
+    #[eth_abi(TokenEndpoint, TokenClient)]
+    pub trait TokenContract {
+		/// The constructor
+        fn constructor(&mut self, _total_supply: U256);
+        /// Total amount of tokens
+        #[constant]
+        fn totalSupply(&mut self) -> U256;
+        /// What is the balance of a particular account?
+        #[constant]
+        fn balanceOf(&mut self, _owner: Address) -> U256;
+        /// Transfer the balance from owner's account to another account
+	    fn transfer(&mut self, _to: Address, _amount: U256) -> bool;
+        /// Event declaration
+        #[event]
+	    fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
+    }
+
+    pub struct TokenContractInstance;
+
+    impl TokenContract for TokenContractInstance {
+        fn constructor(&mut self, total_supply: U256) {
+            // ...
+        }
+
+        fn totalSupply(&mut self) -> U256 {
+            // ...
+        }
+
+        fn balanceOf(&mut self, owner: Address) -> U256 {
+		    read_balance_of(&owner)
+	    }
+
+        fn transfer(&mut self, to: Address, amount: U256) -> bool {
+            let sender = pwasm_ethereum::sender();
+            let senderBalance = read_balance_of(&sender);
+            let recipientBalance = read_balance_of(&to);
+            if amount == 0.into() || senderBalance < amount {
+                false
+            } else {
+                let new_sender_balance = senderBalance - amount;
+                let new_recipient_balance = recipientBalance + amount;
+                pwasm_ethereum::write(&balance_key(&sender), &new_sender_balance.into());
+                pwasm_ethereum::write(&balance_key(&to), &new_recipient_balance.into());
+                self.Transfer(sender, to, amount);
+                true
+		    }
+	    }
+    }
+
+    // Reads balance by address
+    fn read_balance_of(owner: &Address) -> U256 {
+        pwasm_ethereum::read(&balance_key(owner)).into()
+    }
+
+    // Generates a balance key for some address.
+    // Used to map balances with their owners.
+    fn balance_key(address: &Address) -> H256 {
+        let mut key = H256::from(address);
+        key[0] = 1; // just a naiive "namespace";
+        key
+    }
+}
+```
+
+Events are declared as part of contract trait definition. Arguments which start with the "indexed_" prefix considered as "topics", other arguments are data associated with event.
+```rust
+    #[eth_abi(TokenEndpoint, TokenClient)]
+    pub trait TokenContract {
+        fn transfer(&mut self, _to: Address, _amount: U256) -> bool;
+        #[event]
+        fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
+    }
+
+    fn transfer(&mut self, to: Address, amount: U256) -> bool {
+        let sender = pwasm_ethereum::sender();
+        let senderBalance = read_balance_of(&sender);
+        let recipientBalance = read_balance_of(&to);
+        if amount == 0.into() || senderBalance < amount {
+            false
+        } else {
+            let new_sender_balance = senderBalance - amount;
+            let new_recipient_balance = recipientBalance + amount;
+            pwasm_ethereum::write(&balance_key(&sender), &new_sender_balance.into());
+            pwasm_ethereum::write(&balance_key(&to), &new_recipient_balance.into());
+            self.Transfer(sender, to, amount);
+            true
+        }
+    }
+```
+
+Topics are useful to filter events produced by contract. In following example we use Web3.js to subscribe to the `Transfer` events of deployed `TokenContract`.
+```javascript
+    var Web3 = require("web3");
+    var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
+    var TokenContract = new web3.eth.Contract(abi, "0xe1EDa226759825E236001714bcDc0ca0B21fd800", { from: web3.eth.defaultAccount });
+    var event = TokenContract.Transfer({valueA: 23} [, additionalFilterObject])
+
+    // Subscribe to the Transfer event
+    TokenContract.events.Transfer({
+        from: "0xe2fDa626759825E236001714bcDc0ca0B21fd800" // Filter transactions by sender
+    }, function (err, event) {
+        console.log(event);
+    });
+```
+
+## Deploy
+Starting from version 1.8 Parity includes support for running Wasm contracts. Wasm support isn't enabled by default it should be specified in the "chainspec" file. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
+
+[Source](https://github.com/fckt/pwasm-tutorial/tree/master/step-4/wasm-dev-chain.json)
+```
+{
+    "name": "DevelopmentChain",
+    "engine": {
+        "instantSeal": null
+    },
+    "params": {
+        "wasm": true,
+        "gasLimitBoundDivisor": "0x0400",
+        "accountStartNonce": "0x0",
+        "maximumExtraDataSize": "0x20",
+        "minGasLimit": "0x1388",
+        "networkID" : "0x11"
+    },
+    "genesis": {
+        "seal": {
+            "generic": "0x0"
+        },
+        "difficulty": "0x20000",
+        "author": "0x0000000000000000000000000000000000000000",
+        "timestamp": "0x00",
+        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "extraData": "0x",
+        "gasLimit": "0x5B8D80"
+    },
+    "accounts": {
+        "0000000000000000000000000000000000000001": { "balance": "1", "builtin": { "name": "ecrecover", "pricing": { "linear": { "base": 3000, "word": 0 } } } },
+        "0000000000000000000000000000000000000002": { "balance": "1", "builtin": { "name": "sha256", "pricing": { "linear": { "base": 60, "word": 12 } } } },
+        "0000000000000000000000000000000000000003": { "balance": "1", "builtin": { "name": "ripemd160", "pricing": { "linear": { "base": 600, "word": 120 } } } },
+        "0000000000000000000000000000000000000004": { "balance": "1", "builtin": { "name": "identity", "pricing": { "linear": { "base": 15, "word": 3 } } } },
+        "0x00a329c0648769a73afac7f9381e08fb43dbea72": { "balance": "1606938044258990275541962092341162602522202993782792835301376" }
+    }
+}
+
+```
+Run Parity:
+```
+parity --chain ./wasm-dev-chain.json --jsonrpc-apis=all
+```
+Open a separate terminal window, cd to `step-4` and build contract:
+```bash
+cargo build --release --target wasm32-unknown-unknown
+wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract
+```
+It should produce 2 files:
+- a compiled Wasm binary `./target/pwasm_tutorial_contract.wasm`
+- an ABI file: `./target/json/TokenContract.json`
+
+Now you can use Web.js to connect to the Parity node and deploy Wasm `pwasm_tutorial_contract.wasm`:
+
+```javascript
+    var Web3 = require("web3");
+    var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    web3.eth.defaultAccount = "0x00a329c0648769a73afac7f9381e08fb43dbea72";
+
+    var abi = JSON.parse(fs.readFileSync("./target/json/TokenContract.json")); // read JSON ABI
+    var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").toString('hex'); // convert Wasm binary to hex format
+
+    var TokenContract = new web3.eth.Contract(abi, { data: codeHex, from: web3.eth.defaultAccount });
+    // Will create TokenContract with `totalSupply` = 10000000 and print a result
+    TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({from: web3.eth.defaultAccount}).then((a) => console.log(a);
+```
 
 ## Testing
+TODO: describe testing

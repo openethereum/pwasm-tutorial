@@ -13,6 +13,9 @@ pwasm-abi-derive = { git = "https://github.com/paritytech/pwasm-abi" }
 version = "4"
 default-features = false
 
+[dependencies.parity-hash]
+version = "1"
+default-features = false
 
 [lib]
 crate-type = ["cdylib"]
