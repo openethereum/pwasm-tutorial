@@ -202,13 +202,13 @@ In order to make calls to our `TokenContract` we need to generate the payload `T
 
 ```rust
 #[eth_abi(TokenEndpoint, TokenClient)]
-    pub trait TokenContract {
-		/// The constructor
-        fn constructor(&mut self, _total_supply: U256);
-        /// Total amount of tokens
-        #[constant] // #[constant] hint affect the resulting JSON abi. It sets "constant": true prore
-        fn totalSupply(&mut self) -> U256;
-    }
+pub trait TokenContract {
+    /// The constructor
+    fn constructor(&mut self, _total_supply: U256);
+    /// Total amount of tokens
+    #[constant] // #[constant] hint affect the resulting JSON abi. It sets "constant": true prore
+    fn totalSupply(&mut self) -> U256;
+}
 ```
 
 We've added a second argument `TokenClient` to the `eth_abi` macro, so this way we ask to generate a client implementation for `TokenContract` trait and name it as `TokenClient`. Let's suppose we've deployed a token contract on `0xe1EDa226759825E236001714bcDc0ca0B21fd800` address. That's how we can make calls to it.
@@ -348,44 +348,44 @@ pub mod token {
 Events are declared as part of contract trait definition. Arguments which start with the "indexed_" prefix considered as "topics", other arguments are data associated with event.
 
 ```rust
-    #[eth_abi(TokenEndpoint, TokenClient)]
-    pub trait TokenContract {
-        fn transfer(&mut self, _to: Address, _amount: U256) -> bool;
-        #[event]
-        fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
-    }
+#[eth_abi(TokenEndpoint, TokenClient)]
+pub trait TokenContract {
+    fn transfer(&mut self, _to: Address, _amount: U256) -> bool;
+    #[event]
+    fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
+}
 
-    fn transfer(&mut self, to: Address, amount: U256) -> bool {
-        let sender = pwasm_ethereum::sender();
-        let senderBalance = read_balance_of(&sender);
-        let recipientBalance = read_balance_of(&to);
-        if amount == 0.into() || senderBalance < amount {
-            false
-        } else {
-            let new_sender_balance = senderBalance - amount;
-            let new_recipient_balance = recipientBalance + amount;
-            pwasm_ethereum::write(&balance_key(&sender), &new_sender_balance.into());
-            pwasm_ethereum::write(&balance_key(&to), &new_recipient_balance.into());
-            self.Transfer(sender, to, amount);
-            true
-        }
+fn transfer(&mut self, to: Address, amount: U256) -> bool {
+    let sender = pwasm_ethereum::sender();
+    let senderBalance = read_balance_of(&sender);
+    let recipientBalance = read_balance_of(&to);
+    if amount == 0.into() || senderBalance < amount {
+        false
+    } else {
+        let new_sender_balance = senderBalance - amount;
+        let new_recipient_balance = recipientBalance + amount;
+        pwasm_ethereum::write(&balance_key(&sender), &new_sender_balance.into());
+        pwasm_ethereum::write(&balance_key(&to), &new_recipient_balance.into());
+        self.Transfer(sender, to, amount);
+        true
     }
+}
 ```
 
 Topics are useful to filter events produced by contract. In following example we use Web3.js to subscribe to the `Transfer` events of deployed `TokenContract`.
 ```javascript
-    var Web3 = require("web3");
-    var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-    var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
-    var TokenContract = new web3.eth.Contract(abi, "0xe1EDa226759825E236001714bcDc0ca0B21fd800", { from: web3.eth.defaultAccount });
-    var event = TokenContract.Transfer({valueA: 23} [, additionalFilterObject])
+var Web3 = require("web3");
+var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
+var TokenContract = new web3.eth.Contract(abi, "0xe1EDa226759825E236001714bcDc0ca0B21fd800", { from: web3.eth.defaultAccount });
+var event = TokenContract.Transfer({valueA: 23} [, additionalFilterObject])
 
-    // Subscribe to the Transfer event
-    TokenContract.events.Transfer({
-        from: "0xe2fDa626759825E236001714bcDc0ca0B21fd800" // Filter transactions by sender
-    }, function (err, event) {
-        console.log(event);
-    });
+// Subscribe to the Transfer event
+TokenContract.events.Transfer({
+    from: "0xe2fDa626759825E236001714bcDc0ca0B21fd800" // Filter transactions by sender
+}, function (err, event) {
+    console.log(event);
+});
 ```
 
 ## Deploy
@@ -455,21 +455,21 @@ It should produce 2 files we need:
 At this point we can use Web.js to connect to the Parity node and deploy Wasm `pwasm_tutorial_contract.wasm`. Run following code in `node` console:
 
 ```javascript
-    var Web3 = require("web3");
-    // Connect to our local node
-    var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+var Web3 = require("web3");
+// Connect to our local node
+var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
-    // Setup default account
-    web3.eth.defaultAccount = "0x004ec07d2329997267ec62b4166639513386f32e";
-    // Unlock account
-    web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user");
+// Setup default account
+web3.eth.defaultAccount = "0x004ec07d2329997267ec62b4166639513386f32e";
+// Unlock account
+web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user");
 
-    var abi = JSON.parse(fs.readFileSync("./target/json/TokenContract.json")); // read JSON ABI
-    var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").toString('hex'); // convert Wasm binary to hex format
+var abi = JSON.parse(fs.readFileSync("./target/json/TokenContract.json")); // read JSON ABI
+var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").toString('hex'); // convert Wasm binary to hex format
 
-    var TokenContract = new web3.eth.Contract(abi, { data: codeHex, from: web3.eth.defaultAccount });
-    // Will create TokenContract with `totalSupply` = 10000000 and print a result
-    TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({from: web3.eth.defaultAccount}).then((a) => console.log(a);
+var TokenContract = new web3.eth.Contract(abi, { data: codeHex, from: web3.eth.defaultAccount });
+// Will create TokenContract with `totalSupply` = 10000000 and print a result
+TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({from: web3.eth.defaultAccount}).then((a) => console.log(a);
 ```
 
 ## Testing
