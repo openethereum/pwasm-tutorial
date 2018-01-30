@@ -108,6 +108,7 @@ pub fn call(desc: *mut u8) {
 
 ## Contract ABI declaration
 Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-2
+
 Let's implement a simple [ERC-20](https://en.wikipedia.org/wiki/ERC20) token contract.
 
 ```rust
@@ -282,7 +283,7 @@ pub mod token {
 
     #[eth_abi(TokenEndpoint, TokenClient)]
     pub trait TokenContract {
-		/// The constructor
+        /// The constructor
         fn constructor(&mut self, _total_supply: U256);
         /// Total amount of tokens
         #[constant]
@@ -291,10 +292,10 @@ pub mod token {
         #[constant]
         fn balanceOf(&mut self, _owner: Address) -> U256;
         /// Transfer the balance from owner's account to another account
-	    fn transfer(&mut self, _to: Address, _amount: U256) -> bool;
+        fn transfer(&mut self, _to: Address, _amount: U256) -> bool;
         /// Event declaration
         #[event]
-	    fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
+        fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
     }
 
     pub struct TokenContractInstance;
@@ -309,8 +310,8 @@ pub mod token {
         }
 
         fn balanceOf(&mut self, owner: Address) -> U256 {
-		    read_balance_of(&owner)
-	    }
+            read_balance_of(&owner)
+        }
 
         fn transfer(&mut self, to: Address, amount: U256) -> bool {
             let sender = pwasm_ethereum::sender();
@@ -325,8 +326,8 @@ pub mod token {
                 pwasm_ethereum::write(&balance_key(&to), &new_recipient_balance.into());
                 self.Transfer(sender, to, amount);
                 true
-		    }
-	    }
+            }
+        }
     }
 
     // Reads balance by address
