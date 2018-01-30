@@ -276,7 +276,7 @@ Source code: https://github.com/fckt/pwasm-tutorial/tree/master/master/step-4
 
 Events allow the convenient usage of the EVM logging facilities, which in turn can be used to “call” JavaScript callbacks in the user interface of a dapp, which listen for these events.
 
-Let's implement the `transfer` method for our ERC-20 contract. Move to `step-4` directory to see the complete implementation.
+Let's implement the `transfer` method for our ERC-20 contract. `step-4` directory contains the complete implementation.
 
 ```rust
 pub mod token {
@@ -346,6 +346,7 @@ pub mod token {
 ```
 
 Events are declared as part of contract trait definition. Arguments which start with the "indexed_" prefix considered as "topics", other arguments are data associated with event.
+
 ```rust
     #[eth_abi(TokenEndpoint, TokenClient)]
     pub trait TokenContract {
@@ -390,7 +391,7 @@ Topics are useful to filter events produced by contract. In following example we
 ## Deploy
 Starting from version 1.8 Parity includes support for running Wasm contracts. Wasm support isn't enabled by default it should be specified in the "chainspec" file. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
 
-[Source](https://github.com/fckt/pwasm-tutorial/tree/master/step-4/wasm-dev-chain.json)
+[Source](https://github.com/fckt/pwasm-tutorial/tree/master/wasm-dev-chain.json)
 ```
 {
     "name": "DevelopmentChain",
