@@ -431,7 +431,7 @@ Run Parity:
 ```bash
 parity --chain ./wasm-dev-chain.json --jsonrpc-apis=all
 ```
-Leave it run in the separate terminal window.
+Leave it run in a separate terminal window.
 
 Among with other things we've added an account `0x004ec07d2329997267ec62b4166639513386f32e` with some ETH to `wasm-dev-chain.json` on which behalf we'll run transactions. Now we need to add this account to the local keychain:
 
