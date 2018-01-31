@@ -122,7 +122,7 @@ mod tests {
     extern crate std;
     use super::*;
     use pwasm_test::{ExternalBuilder, set_external};
-    use pwasm_std::hash::{Address};
+    use parity_hash::Address;
     use alloc::boxed::Box;
     use token::TokenContract;
 
