@@ -1,0 +1,33 @@
+[package]
+name = "pwasm-tutorial-contract"
+version = "0.1.0"
+authors = ["Alexey Frolov <alexey@parity.io>"]
+
+[dependencies]
+pwasm-std = "0.3"
+pwasm-ethereum = { git = "https://github.com/nikvolf/pwasm-ethereum" }
+pwasm-abi = { git = "https://github.com/paritytech/pwasm-abi" }
+pwasm-abi-derive = { git = "https://github.com/paritytech/pwasm-abi" }
+
+[dependencies.bigint]
+version = "4"
+default-features = false
+
+[dependencies.parity-hash]
+version = "1"
+default-features = false
+
+[dev-dependencies]
+pwasm-test = { git = "https://github.com/paritytech/pwasm-test" }
+
+[lib]
+crate-type = ["cdylib"]
+path = "src/sample.rs"
+
+[features]
+std = ["pwasm-std/std", "pwasm-ethereum/std"]
+
+[profile.release]
+panic = "abort"
+lto = true
+opt-level = "z"
