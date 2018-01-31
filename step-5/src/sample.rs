@@ -114,6 +114,7 @@ pub fn deploy(desc: *mut u8) {
 }
 
 #[cfg(test)]
+#[macro_use]
 extern crate pwasm_test;
 
 #[cfg(test)]
@@ -131,7 +132,12 @@ mod tests {
         let mut contract = token::TokenContractInstance{};
         let owner_address = Address::from("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
         let sam_address = Address::from("0xdb6fd484cfa46eeeb73c71edee823e4812f9e2e1");
-        set_external(Box::new(ExternalBuilder::new().sender(owner_address.clone()).build()));
+        // Here we're creating an External context using ExternalBuilder and set the `sender` to the `owner_address`
+        // so `pwasm_ethereum::sender()` in ExternalBuilder::constructor() will return that `owner_address`
+        set_external(
+            Box::new(ExternalBuilder::new()
+                    .sender(owner_address.clone())
+                    .build()));
         let total_supply = 10000.into();
         contract.constructor(total_supply);
         assert_eq!(contract.balanceOf(owner_address), total_supply);
@@ -139,4 +145,17 @@ mod tests {
         assert_eq!(contract.balanceOf(owner_address), 9000.into());
         assert_eq!(contract.balanceOf(sam_address), 1000.into());
     }
+
+    // Or you can use test_with_external to setup an External context first
+    test_with_external!(
+        ExternalBuilder::new()
+            .storage([1,0,0,0,0,0,0,0,0,0,0,0,
+                31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31].into(), bigint::U256::from(100000).into())
+            .build(),
+        balanceOf_should_return_balance {
+            let address = Address::from([31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31]);
+            let mut contract = token::TokenContractInstance{};
+            assert_eq!(contract.balanceOf(address), 100000.into())
+        }
+    );
 }
