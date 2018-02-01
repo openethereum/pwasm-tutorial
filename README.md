@@ -458,7 +458,7 @@ It should produce 2 files we need:
 - a compiled Wasm binary `./target/pwasm_tutorial_contract.wasm`
 - an ABI file: `./target/json/TokenContract.json`
 
-At this point we can use Web.js to connect to the Parity node and deploy Wasm `pwasm_tutorial_contract.wasm`. Run following code in `node` console:
+At this point we can use Web.js to connect to the Parity node and deploy Wasm `pwasm_tutorial_contract.wasm`. Run the following code in `node` console:
 
 ```javascript
 var Web3 = require("web3");
