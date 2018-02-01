@@ -9,7 +9,6 @@ rustup install nightly
 ```
 
 Also we need to install `wasm32-unknown-unknown` to compile contract to Wasm:
-
 ```bash
 rustup target add wasm32-unknown-unknown --toolchain nightly
 ```
@@ -24,7 +23,10 @@ cargo install --git https://github.com/paritytech/wasm-utils wasm-build
 Follow this guide https://github.com/paritytech/parity/wiki/Setup
 
 ### Web3.js
-Follow this guide https://github.com/ethereum/web3.js/#installation
+We'll be using `Web3.js` to connect to the Parity node. Use [npm](https://nodejs.org/en/) to install `Web3.js` globally:
+```
+npm -g install web3
+```
 
 ### Tutorial source code
 We provide a full source code for each step in this tutorial under `step-*` directories.
@@ -56,8 +58,10 @@ pub fn call(desc: *mut u8) {
     // result.done writes the result vector to the call descriptor.
     result.done(b"result".to_vec());
 }
-
 ```
+### pwasm-std
+[pwasm-std](https://paritytech.github.io/pwasm-std/pwasm_std/) is the lightweight a standard library. It implements common data structures, conversion utils and provides bindings to the runtime.
+
 ## Building
 To make sure that everything is setup go to the `step-0` directory and run:
 
@@ -105,6 +109,9 @@ pub fn call(desc: *mut u8) {
     result.done(owner.to_vec());
 }
 ```
+
+### pwasm-ethereum
+[pwasm-ethereum](https://github.com/NikVolf/pwasm-ethereum) is a collection of bindings to interact with ethereum-like network.
 
 ## Contract ABI declaration
 Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-2
@@ -472,4 +479,65 @@ TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({from: web3.et
 ```
 
 ## Testing
-TODO: describe testing
+[pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test contract logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
+
+By default our contracts are building with `#![no_std]`, `rust test` is using `std` (for treading and i/o, for example). Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/fckt/pwasm-tutorial/tree/master/step-5):
+
+```
+[features]
+std = ["pwasm-std/std", "pwasm-ethereum/std"]
+```
+Now you can `cd step-5` and `cargo test --features std` should pass.
+
+Take a look https://github.com/fckt/pwasm-tutorial/blob/master/step-5/src/sample.rs#L116-L161 to see an example how to test a `transfer` method of our token contract.
+
+```rust
+#[cfg(test)]
+#[allow(non_snake_case)]
+mod tests {
+    extern crate std;
+    use super::*;
+    use pwasm_test::{ExternalBuilder, set_external};
+    use parity_hash::Address;
+    use alloc::boxed::Box;
+    use token::TokenContract;
+
+    #[test]
+    fn should_succeed_transfering_1000_from_owner_to_another_address() {
+        let mut contract = token::TokenContractInstance{};
+        let owner_address = Address::from("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
+        let sam_address = Address::from("0xdb6fd484cfa46eeeb73c71edee823e4812f9e2e1");
+        // Here we're creating an External context using ExternalBuilder and set the `sender` to the `owner_address`
+        // so `pwasm_ethereum::sender()` in ExternalBuilder::constructor() will return that `owner_address`
+        set_external(
+            Box::new(ExternalBuilder::new()
+                    .sender(owner_address.clone())
+                    .build()));
+        let total_supply = 10000.into();
+        contract.constructor(total_supply);
+        assert_eq!(contract.balanceOf(owner_address), total_supply);
+        assert_eq!(contract.transfer(sam_address, 1000.into()), true);
+        assert_eq!(contract.balanceOf(owner_address), 9000.into());
+        assert_eq!(contract.balanceOf(sam_address), 1000.into());
+    }
+
+    // Or you can use test_with_external to setup an External context first
+    test_with_external!(
+        ExternalBuilder::new()
+            .storage([1,0,0,0,0,0,0,0,0,0,0,0,
+                31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31].into(), bigint::U256::from(100000).into())
+            .build(),
+        balanceOf_should_return_balance {
+            let address = Address::from([31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31]);
+            let mut contract = token::TokenContractInstance{};
+            assert_eq!(contract.balanceOf(address), 100000.into())
+        }
+    );
+}
+```
+
+[Here](https://github.com/paritytech/pwasm-test/tree/master/tests) you can find more examples on how to:
+- [mock calls](https://github.com/paritytech/pwasm-test/blob/master/tests/calls.rs) to other contracts
+- [read event logs created by contract](https://github.com/paritytech/pwasm-test/blob/master/tests/log.rs)
+- [init contract with storage](https://github.com/paritytech/pwasm-test/blob/master/tests/storage_read.rs).
+
