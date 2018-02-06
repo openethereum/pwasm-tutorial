@@ -46,7 +46,7 @@ extern crate pwasm_std;
 
 /// Will be described in the next step
 #[no_mangle]
-pub fn deploy(desc: *mut u8) {
+pub fn deploy(_desc: *mut u8) {
 }
 
 /// The call function is the main function of the *deployed* contract
@@ -77,37 +77,37 @@ Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-1
 When deploying a contract we often want to setup its initial storage. To solve this problem we are exporting another function "deploy" which executes only once on contract deployment.
 
 ```rust
-/// This contract will return the address from which it was deployed
+// This contract will return the address from which it was deployed
 
 #![no_std]
 #![feature(wasm_import_memory)]
 #![wasm_import_memory]
 
 extern crate pwasm_std;
-
 extern crate pwasm_ethereum;
+extern crate parity_hash;
 
-use pwasm_std::hash::H256;
+use parity_hash::H256;
 
 // The "deploy" will be executed only once on deployment but will not be stored on the blockchain
 #[no_mangle]
-pub fn deploy(desc: *mut u8) {
-    let (args, result) = unsafe { pwasm_std::parse_args(desc) };
-    // Lets set the sender address to the contract storage
-    pwasm_ethereum::storage::write(&H256::zero().into(), &H256::from(pwasm_ethereum::ext::sender()).into());
-    // Note we shouldn't write any result into the call descriptor in deploy.
+pub fn deploy(_desc: *mut u8) {
+    // Lets set the sender address to the contract storage at address "0"
+    pwasm_ethereum::write(&H256::zero().into(), &H256::from(pwasm_ethereum::sender()).into());
+    // Note we should't write any result into the call descriptor in deploy.
 }
 
-// The following function will be the main function of the deployed contract
+// The following code will be stored on the blockchain.
 #[no_mangle]
 pub fn call(desc: *mut u8) {
     // pwasm_std::parse_args splits the call descriptor into arguments and result pointers
     let (_args, result) = unsafe { pwasm_std::parse_args(desc) };
     // Will read the address of the deployer which we wrote to the storage on the deploy stage
-    let owner = pwasm_ethereum::storage::read(&H256::zero().into());
+    let owner = pwasm_ethereum::read(&H256::zero().into());
     // result.done() writes the result vector to the call descriptor.
     result.done(owner.to_vec());
 }
+
 ```
 
 ### pwasm-ethereum
@@ -495,44 +495,33 @@ Take a look https://github.com/fckt/pwasm-tutorial/blob/master/step-5/src/sample
 #[cfg(test)]
 #[allow(non_snake_case)]
 mod tests {
-    extern crate std;
-    use super::*;
-    use pwasm_test::{ExternalBuilder, set_external};
-    use parity_hash::Address;
-    use alloc::boxed::Box;
-    use token::TokenContract;
+    #[cfg(test)]
+    #[allow(non_snake_case)]
+    mod tests {
+        extern crate std;
+        use super::*;
+        use pwasm_test::{ext_reset, ext_get};
+        use parity_hash::Address;
+        use token::TokenContract;
 
-    #[test]
-    fn should_succeed_transfering_1000_from_owner_to_another_address() {
-        let mut contract = token::TokenContractInstance{};
-        let owner_address = Address::from("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
-        let sam_address = Address::from("0xdb6fd484cfa46eeeb73c71edee823e4812f9e2e1");
-        // Here we're creating an External context using ExternalBuilder and set the `sender` to the `owner_address`
-        // so `pwasm_ethereum::sender()` in ExternalBuilder::constructor() will return that `owner_address`
-        set_external(
-            Box::new(ExternalBuilder::new()
-                    .sender(owner_address.clone())
-                    .build()));
-        let total_supply = 10000.into();
-        contract.constructor(total_supply);
-        assert_eq!(contract.balanceOf(owner_address), total_supply);
-        assert_eq!(contract.transfer(sam_address, 1000.into()), true);
-        assert_eq!(contract.balanceOf(owner_address), 9000.into());
-        assert_eq!(contract.balanceOf(sam_address), 1000.into());
-    }
-
-    // Or you can use test_with_external to setup an External context first
-    test_with_external!(
-        ExternalBuilder::new()
-            .storage([1,0,0,0,0,0,0,0,0,0,0,0,
-                31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31].into(), bigint::U256::from(100000).into())
-            .build(),
-        balanceOf_should_return_balance {
-            let address = Address::from([31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31]);
+        #[test]
+        fn should_succeed_transfering_1000_from_owner_to_another_address() {
             let mut contract = token::TokenContractInstance{};
-            assert_eq!(contract.balanceOf(address), 100000.into())
+            let owner_address = Address::from("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
+            let sam_address = Address::from("0xdb6fd484cfa46eeeb73c71edee823e4812f9e2e1");
+            // Here we're creating an External context using ExternalBuilder and set the `sender` to the `owner_address`
+            // so `pwasm_ethereum::sender()` in TokenContract::constructor() will return that `owner_address`
+            ext_reset(|e| e.sender(owner_address.clone()));
+            let total_supply = 10000.into();
+            contract.constructor(total_supply);
+            assert_eq!(contract.balanceOf(owner_address), total_supply);
+            assert_eq!(contract.transfer(sam_address, 1000.into()), true);
+            assert_eq!(contract.balanceOf(owner_address), 9000.into());
+            assert_eq!(contract.balanceOf(sam_address), 1000.into());
+            // 1 log entry should be created
+            assert_eq!(ext_get().logs().len(), 1);
         }
-    );
+    }
 }
 ```
 
@@ -540,4 +529,7 @@ mod tests {
 - [mock calls](https://github.com/paritytech/pwasm-test/blob/master/tests/calls.rs) to other contracts
 - [read event logs created by contract](https://github.com/paritytech/pwasm-test/blob/master/tests/log.rs)
 - [init contract with storage](https://github.com/paritytech/pwasm-test/blob/master/tests/storage_read.rs).
+
+More testing examples:
+https://github.com/paritytech/pwasm-token-example/blob/master/contract/src/lib.rs#L194
 

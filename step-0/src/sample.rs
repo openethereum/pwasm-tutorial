@@ -9,7 +9,7 @@ extern crate pwasm_std;
 
 /// Will be described in the next step
 #[no_mangle]
-pub fn deploy(desc: *mut u8) {
+pub fn deploy(_desc: *mut u8) {
 }
 
 /// The call function is the main function of the *deployed* contract

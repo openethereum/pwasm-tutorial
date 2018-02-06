@@ -122,9 +122,8 @@ extern crate pwasm_test;
 mod tests {
     extern crate std;
     use super::*;
-    use pwasm_test::{ExternalBuilder, set_external};
+    use pwasm_test::{ext_reset, ext_get};
     use parity_hash::Address;
-    use alloc::boxed::Box;
     use token::TokenContract;
 
     #[test]
@@ -133,29 +132,15 @@ mod tests {
         let owner_address = Address::from("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
         let sam_address = Address::from("0xdb6fd484cfa46eeeb73c71edee823e4812f9e2e1");
         // Here we're creating an External context using ExternalBuilder and set the `sender` to the `owner_address`
-        // so `pwasm_ethereum::sender()` in ExternalBuilder::constructor() will return that `owner_address`
-        set_external(
-            Box::new(ExternalBuilder::new()
-                    .sender(owner_address.clone())
-                    .build()));
+        // so `pwasm_ethereum::sender()` in TokenContract::constructor() will return that `owner_address`
+        ext_reset(|e| e.sender(owner_address.clone()));
         let total_supply = 10000.into();
         contract.constructor(total_supply);
         assert_eq!(contract.balanceOf(owner_address), total_supply);
         assert_eq!(contract.transfer(sam_address, 1000.into()), true);
         assert_eq!(contract.balanceOf(owner_address), 9000.into());
         assert_eq!(contract.balanceOf(sam_address), 1000.into());
+        // 1 log entry should be created
+        assert_eq!(ext_get().logs().len(), 1);
     }
-
-    // Or you can use test_with_external to setup an External context first
-    test_with_external!(
-        ExternalBuilder::new()
-            .storage([1,0,0,0,0,0,0,0,0,0,0,0,
-                31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31].into(), bigint::U256::from(100000).into())
-            .build(),
-        balanceOf_should_return_balance {
-            let address = Address::from([31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31]);
-            let mut contract = token::TokenContractInstance{};
-            assert_eq!(contract.balanceOf(address), 100000.into())
-        }
-    );
 }
