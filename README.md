@@ -10,7 +10,7 @@ rustup install nightly
 
 Also we need to install `wasm32-unknown-unknown` to compile contract to Wasm:
 ```bash
-rustup target add wasm32-unknown-unknown --toolchain nightly
+rustup target add wasm32-unknown-unknown
 ```
 
 ### Parity wasm-build
@@ -50,7 +50,7 @@ pub fn deploy(_desc: *mut u8) {
 }
 
 /// The call function is the main function of the *deployed* contract
-/// Function receives a pointer for the call descriptor.
+/// Function receives a pointer to the call descriptor.
 #[no_mangle]
 pub fn call(desc: *mut u8) {
     // pwasm_std::parse_args splits the call descriptor into arguments and result pointers
@@ -60,7 +60,7 @@ pub fn call(desc: *mut u8) {
 }
 ```
 ### pwasm-std
-[pwasm-std](https://paritytech.github.io/pwasm-std/pwasm_std/) is the lightweight a standard library. It implements common data structures, conversion utils and provides bindings to the runtime.
+[pwasm-std](https://paritytech.github.io/pwasm-std/pwasm_std/) is the lightweight standard library. It implements common data structures, conversion utils and provides bindings to the runtime.
 
 ## Building
 To make sure that everything is setup go to the `step-0` directory and run:
@@ -74,7 +74,7 @@ As the result the `pwasm_tutorial_contract.wasm` should be placed under the `ste
 ## The constructor
 Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-1
 
-When deploying a contract we often want to setup its initial storage. To solve this problem we are exporting another function "deploy" which executes only once on contract deployment.
+When deploying a contract we often want to set its ititial storage values (e.g. `totalSupply` if it's a token contact). To address this problem we are exporting another function "deploy" which executes only once on contract deployment.
 
 ```rust
 // This contract will return the address from which it was deployed
@@ -134,7 +134,7 @@ mod token {
     use pwasm_std::hash::{H256};
     use bigint::U256;
 
-	// eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
+    // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
     use alloc::Vec;
 
@@ -142,7 +142,7 @@ mod token {
 
     #[eth_abi(TokenEndpoint)]
     pub trait TokenContract {
-		/// The constructor
+	/// The constructor
         fn constructor(&mut self, _total_supply: U256);
         /// Total amount of tokens
         fn totalSupply(&mut self) -> U256;
@@ -181,7 +181,7 @@ pub fn deploy(desc: *mut u8) {
 }
 ```
 `token::TokenContract` is the interface definition of the contract.
-`pwasm_abi_derive::eth_abi` is a [procedural macros](https://doc.rust-lang.org/book/first-edition/procedural-macros.html) which parses an interface (trait) definition of a contact and generates `TokenEndpoint`. `TokenEndpoint` implements an `EndpointInterface` trait.
+`pwasm_abi_derive::eth_abi` is a [procedural macros](https://doc.rust-lang.org/book/first-edition/procedural-macros.html) uses a trait `token::TokenContract` to generate decoder (`TokenEndpoint`) for payload in Solidity ABI format. `TokenEndpoint` implements an `EndpointInterface` trait:
 
 ```rust
 /// Endpoint interface for contracts
@@ -227,7 +227,7 @@ let token = TokenClient::new(Address::from("0xe1EDa226759825E236001714bcDc0ca0B2
 let tokenSupply = token.totalSupply();
 ```
 
-`token.totalSupply()` will execute `pwasm_ethereum::call(Address::from("0xe1EDa226759825E236001714bcDc0ca0B21fd800"), payload)` with address and payload generated for `totalSupply()` signature. Optionally it's possible to set a `value` (in Wei) to transfer with the call and set a `gas` limit.
+`token.totalSupply()` will execute `pwasm_ethereum::call(Address::from("0xe1EDa226759825E236001714bcDc0ca0B21fd800"), payload)` with `address` and `payload` generated according to `totalSupply()` signature. Optionally it's possible to set a `value` (in Wei) to transfer with the call and set a `gas` limit.
 
 ```rust
 let token = TokenClient::new(Address::from("0xe1EDa226759825E236001714bcDc0ca0B21fd800"))
@@ -348,7 +348,7 @@ pub mod token {
 }
 ```
 
-Events are declared as part of contract trait definition. Arguments which start with the "indexed_" prefix considered as "topics", other arguments are data associated with event.
+Events are declared as part a of contract trait definition. Arguments which start with the "indexed_" prefix considered as "topics", other arguments are data associated with event.
 
 ```rust
 #[eth_abi(TokenEndpoint, TokenClient)]
@@ -477,7 +477,7 @@ TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({from: web3.et
 ## Testing
 [pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test contract logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
 
-By default our contracts are building with `#![no_std]`, `rust test` is using `std` (for treading and i/o, for example). Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/fckt/pwasm-tutorial/tree/master/step-5):
+By default our contracts are building with `#![no_std]`, but `rust test` is using `std` (for treading to run test in parallel and i/o, for example). Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/fckt/pwasm-tutorial/tree/master/step-5):
 
 ```
 [features]
