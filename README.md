@@ -37,8 +37,8 @@ Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-0
 ```rust
 // Contract doesn't use Rust's standard library
 #![no_std]
-#![feature(wasm_import_memory)]
-#![wasm_import_memory]
+
+
 
 // `pwasm-std` is the lightweight implementation of a standard library
 // It implements common data structures and provides bindings to the runtime
@@ -80,8 +80,6 @@ When deploying a contract we often want to setup its initial storage. To solve t
 // This contract will return the address from which it was deployed
 
 #![no_std]
-#![feature(wasm_import_memory)]
-#![wasm_import_memory]
 
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
@@ -122,8 +120,6 @@ Let's implement a simple [ERC-20](https://en.wikipedia.org/wiki/ERC20) token con
 #![no_std]
 #![feature(alloc)]
 #![feature(proc_macro)]
-#![feature(wasm_import_memory)]
-#![wasm_import_memory]
 
 extern crate pwasm_std;
 extern crate pwasm_ethereum;

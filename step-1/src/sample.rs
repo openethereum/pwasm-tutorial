@@ -1,7 +1,5 @@
 // This contract will return the address from which it was deployed
 #![no_std]
-#![feature(wasm_import_memory)]
-#![wasm_import_memory]
 
 extern crate pwasm_std;
 extern crate pwasm_ethereum;

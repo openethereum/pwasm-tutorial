@@ -2,8 +2,6 @@
 #![allow(non_snake_case)]
 #![feature(alloc)]
 #![feature(proc_macro)]
-#![feature(wasm_import_memory)]
-#![wasm_import_memory]
 
 extern crate parity_hash;
 extern crate pwasm_std;
