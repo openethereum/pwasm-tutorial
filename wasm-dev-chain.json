@@ -4,7 +4,7 @@
         "instantSeal": null
     },
     "params": {
-        "wasm": true,
+        "wasmActivationTransition": "0x01"
         "gasLimitBoundDivisor": "0x0400",
         "accountStartNonce": "0x0",
         "maximumExtraDataSize": "0x20",
