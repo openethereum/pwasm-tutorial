@@ -32,7 +32,7 @@ npm -g install web3
 We provide a full source code for each step in this tutorial under `step-*` directories.
 
 ## General structure
-Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-0
+Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-0
 
 ```rust
 // Contract doesn't use Rust's standard library
@@ -66,7 +66,7 @@ wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract
 As the result the `pwasm_tutorial_contract.wasm` should be placed under the `step-0/target` directory.
 
 ## The constructor
-Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-1
+Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-1
 
 When deploying a contract we often want to set its ititial storage values (e.g. `totalSupply` if it's a token contact). To address this problem we are exporting another function "deploy" which executes only once on contract deployment.
 
@@ -101,7 +101,7 @@ pub fn call() {
 [pwasm-ethereum](https://github.com/NikVolf/pwasm-ethereum) is a collection of bindings to interact with ethereum-like network.
 
 ## Contract ABI declaration
-Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-2
+Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-2
 
 Let's implement a simple [ERC-20](https://en.wikipedia.org/wiki/ERC20) token contract.
 
@@ -177,7 +177,7 @@ The `dispatch` expects `payload` and returns result in format defined in [Solidi
 A compete implementation of ERC20 can be found here https://github.com/paritytech/pwasm-token-example.
 
 ## Make calls to other contracts
-Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-3
+Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-3
 
 In order to make calls to our `TokenContract` we need to generate the payload `TokenEndpoint::dispatch()` expects. So `pwasm_abi_derive::eth_abi` can generate an implementation of `TokenContract` which will prepare payload for each method.
 
@@ -253,7 +253,7 @@ var totalSupply = TokenContract.methods.totalSupply();
 ```
 
 ### Events
-Source code: https://github.com/fckt/pwasm-tutorial/tree/master/master/step-4
+Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/master/step-4
 
 Events allow the convenient usage of the EVM logging facilities, which in turn can be used to “call” JavaScript callbacks in the user interface of a dapp, which listen for these events.
 
@@ -371,7 +371,7 @@ TokenContract.events.Transfer({
 ## Deploy
 Starting from version 1.8 Parity includes support for running Wasm contracts. Wasm support isn't enabled by default and needs to be specified in the "chainspec" file. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
 
-[Source](https://github.com/fckt/pwasm-tutorial/tree/master/wasm-dev-chain.json)
+[Source](https://github.com/paritytech/pwasm-tutorial/tree/master/wasm-dev-chain.json)
 ```
 {
     "name": "DevelopmentChain",
@@ -455,7 +455,7 @@ TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({from: web3.et
 ## Testing
 [pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test a contract logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
 
-By default our contracts built with a `#![no_std]`, but `rust test` need the Rust stdlib for treading and i/o. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/fckt/pwasm-tutorial/tree/master/step-5):
+By default our contracts built with a `#![no_std]`, but `rust test` need the Rust stdlib for treading and i/o. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/paritytech/pwasm-tutorial/tree/master/step-5):
 
 ```
 [features]
@@ -463,7 +463,7 @@ std = ["pwasm-std/std", "pwasm-ethereum/std"]
 ```
 Now you can `cd step-5` and `cargo test --features std` should pass.
 
-Take a look https://github.com/fckt/pwasm-tutorial/blob/master/step-5/src/sample.rs#L116-L161 to see an example how to test a `transfer` method of our token contract.
+Take a look https://github.com/paritytech/pwasm-tutorial/blob/master/step-5/src/sample.rs#L116-L161 to see an example how to test a `transfer` method of our token contract.
 
 ```rust
 #[cfg(test)]
