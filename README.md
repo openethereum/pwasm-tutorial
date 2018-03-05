@@ -411,7 +411,7 @@ Run Parity:
 ```bash
 parity --chain ./wasm-dev-chain.json --jsonrpc-apis=all
 ```
-Leave it run in a separate terminal window.
+Let it run in a separate terminal window.
 
 Among with other things we've added an account `0x004ec07d2329997267ec62b4166639513386f32e` with some ETH to `wasm-dev-chain.json` on which behalf we'll run transactions. Now we need to add this account to the local keychain:
 
@@ -423,7 +423,7 @@ Should output something like:
 {"jsonrpc":"2.0","result":"0x004ec07d2329997267ec62b4166639513386f32e","id":0}
 ```
 
-Now cd to `step-4` and build contract:
+Now cd to `step-4` and build the contract:
 ```bash
 cargo build --release --target wasm32-unknown-unknown
 wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract
@@ -455,7 +455,7 @@ TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({from: web3.et
 ## Testing
 [pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test contract logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
 
-By default our contracts are building with `#![no_std]`, but `rust test` is using `std` (for treading to run test in parallel and i/o, for example). Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/fckt/pwasm-tutorial/tree/master/step-5):
+By default our contracts built with a `#![no_std]`, but `rust test` need the Rust stdlib for treading and i/o. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/fckt/pwasm-tutorial/tree/master/step-5):
 
 ```
 [features]
