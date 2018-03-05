@@ -109,15 +109,12 @@ pub fn deploy() {
 }
 
 #[cfg(test)]
-#[macro_use]
-extern crate pwasm_test;
-
-#[cfg(test)]
 #[allow(non_snake_case)]
 mod tests {
+    extern crate pwasm_test;
     extern crate std;
     use super::*;
-    use pwasm_test::{ext_reset, ext_get};
+    use self::pwasm_test::{ext_reset, ext_get};
     use parity_hash::Address;
     use token::TokenContract;
 
