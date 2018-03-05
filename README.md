@@ -253,7 +253,7 @@ var totalSupply = TokenContract.methods.totalSupply();
 ```
 
 ### Events
-Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/master/step-4
+Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-4
 
 Events allow the convenient usage of the EVM logging facilities, which in turn can be used to “call” JavaScript callbacks in the user interface of a dapp, which listen for these events.
 
