@@ -453,7 +453,7 @@ TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({from: web3.et
 ```
 
 ## Testing
-[pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test contract logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
+[pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test a contract logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
 
 By default our contracts built with a `#![no_std]`, but `rust test` need the Rust stdlib for treading and i/o. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/fckt/pwasm-tutorial/tree/master/step-5):
 
