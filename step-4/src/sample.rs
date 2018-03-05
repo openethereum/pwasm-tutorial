@@ -89,18 +89,15 @@ pub mod token {
 // Declares the dispatch and dispatch_ctor methods
 use pwasm_abi::eth::EndpointInterface;
 
-/// The main function receives a pointer for the call descriptor.
 #[no_mangle]
-pub fn call(desc: *mut u8) {
-    let (args, result) = unsafe { pwasm_std::parse_args(desc) };
+pub fn call() {
     let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
     // Read http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding for details
-    result.done(endpoint.dispatch(&args));
+    pwasm_ethereum::ret(&endpoint.dispatch(&pwasm_ethereum::input()));
 }
 
 #[no_mangle]
-pub fn deploy(desc: *mut u8) {
-    let (args, _) = unsafe { pwasm_std::parse_args(desc) };
+pub fn deploy() {
     let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
-    endpoint.dispatch_ctor(&args);
+    endpoint.dispatch_ctor(&pwasm_ethereum::input());
 }

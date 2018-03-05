@@ -38,25 +38,19 @@ Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-0
 // Contract doesn't use Rust's standard library
 #![no_std]
 
-
-
-// `pwasm-std` is the lightweight implementation of a standard library
-// It implements common data structures and provides bindings to the runtime
-extern crate pwasm_std;
+// `pwasm-ethereum` implements bindings to the runtime
+extern crate pwasm_ethereum;
 
 /// Will be described in the next step
 #[no_mangle]
-pub fn deploy(_desc: *mut u8) {
+pub fn deploy() {
 }
 
 /// The call function is the main function of the *deployed* contract
-/// Function receives a pointer to the call descriptor.
 #[no_mangle]
-pub fn call(desc: *mut u8) {
-    // pwasm_std::parse_args splits the call descriptor into arguments and result pointers
-    let (_args, result) = unsafe { pwasm_std::parse_args(desc) };
-    // result.done writes the result vector to the call descriptor.
-    result.done(b"result".to_vec());
+pub fn call() {
+    // Send a result pointer to the runtime
+    pwasm_ethereum::ret(&b"result".to_vec());
 }
 ```
 ### pwasm-std
@@ -78,10 +72,8 @@ When deploying a contract we often want to set its ititial storage values (e.g. 
 
 ```rust
 // This contract will return the address from which it was deployed
-
 #![no_std]
 
-extern crate pwasm_std;
 extern crate pwasm_ethereum;
 extern crate parity_hash;
 
@@ -89,7 +81,7 @@ use parity_hash::H256;
 
 // The "deploy" will be executed only once on deployment but will not be stored on the blockchain
 #[no_mangle]
-pub fn deploy(_desc: *mut u8) {
+pub fn deploy() {
     // Lets set the sender address to the contract storage at address "0"
     pwasm_ethereum::write(&H256::zero().into(), &H256::from(pwasm_ethereum::sender()).into());
     // Note we should't write any result into the call descriptor in deploy.
@@ -97,15 +89,12 @@ pub fn deploy(_desc: *mut u8) {
 
 // The following code will be stored on the blockchain.
 #[no_mangle]
-pub fn call(desc: *mut u8) {
-    // pwasm_std::parse_args splits the call descriptor into arguments and result pointers
-    let (_args, result) = unsafe { pwasm_std::parse_args(desc) };
+pub fn call() {
     // Will read the address of the deployer which we wrote to the storage on the deploy stage
     let owner = pwasm_ethereum::read(&H256::zero().into());
-    // result.done() writes the result vector to the call descriptor.
-    result.done(owner.to_vec());
+    // Send a result pointer to the runtime
+    pwasm_ethereum::ret(&owner.to_vec());
 }
-
 ```
 
 ### pwasm-ethereum
@@ -117,20 +106,10 @@ Source code: https://github.com/fckt/pwasm-tutorial/tree/master/step-2
 Let's implement a simple [ERC-20](https://en.wikipedia.org/wiki/ERC20) token contract.
 
 ```rust
-#![no_std]
-#![feature(alloc)]
-#![feature(proc_macro)]
+// ...
 
-extern crate pwasm_std;
-extern crate pwasm_ethereum;
-extern crate alloc;
-extern crate pwasm_abi;
-extern crate pwasm_abi_derive;
-/// Bigint used for 256-bit arithmetic
-extern crate bigint;
-
-mod token {
-    use pwasm_ethereum::{storage};
+pub mod token {
+    use pwasm_ethereum;
     use pwasm_std::hash::{H256};
     use bigint::U256;
 
@@ -153,32 +132,31 @@ mod token {
     impl TokenContract for TokenContractInstance {
         fn constructor(&mut self, total_supply: U256) {
             // Set up the total supply for the token
-            storage::write(&TOTAL_SUPPLY_KEY, &total_supply.into());
+            pwasm_ethereum::write(&TOTAL_SUPPLY_KEY, &total_supply.into());
         }
 
         fn totalSupply(&mut self) -> U256 {
-            storage::read(&TOTAL_SUPPLY_KEY).into()
+            pwasm_ethereum::read(&TOTAL_SUPPLY_KEY).into()
         }
     }
 }
 // Declares the dispatch and dispatch_ctor methods
 use pwasm_abi::eth::EndpointInterface;
 
-/// The main function receives a pointer for the call descriptor.
 #[no_mangle]
-pub fn call(desc: *mut u8) {
-    let (args, result) = unsafe { pwasm_std::parse_args(desc) };
+pub fn call() {
     let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
     // Read http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding for details
-    result.done(endpoint.dispatch(&args));
+    pwasm_ethereum::ret(&endpoint.dispatch(&pwasm_ethereum::input()));
 }
 
 #[no_mangle]
-pub fn deploy(desc: *mut u8) {
-    let (args, _) = unsafe { pwasm_std::parse_args(desc) };
+pub fn deploy() {
     let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
-    endpoint.dispatch_ctor(&args);
+    //
+    endpoint.dispatch_ctor(&pwasm_ethereum::input());
 }
+
 ```
 `token::TokenContract` is the interface definition of the contract.
 `pwasm_abi_derive::eth_abi` is a [procedural macros](https://doc.rust-lang.org/book/first-edition/procedural-macros.html) uses a trait `token::TokenContract` to generate decoder (`TokenEndpoint`) for payload in Solidity ABI format. `TokenEndpoint` implements an `EndpointInterface` trait:

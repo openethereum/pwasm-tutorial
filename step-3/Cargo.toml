@@ -4,10 +4,10 @@ version = "0.1.0"
 authors = ["Alexey Frolov <alexey@parity.io>"]
 
 [dependencies]
-pwasm-std = "0.3"
-pwasm-ethereum = { git = "https://github.com/nikvolf/pwasm-ethereum" }
-pwasm-abi = { git = "https://github.com/paritytech/pwasm-abi" }
-pwasm-abi-derive = { git = "https://github.com/paritytech/pwasm-abi" }
+pwasm-std = "0.5"
+pwasm-ethereum = "0.1"
+pwasm-abi = "0.1"
+pwasm-abi-derive = "0.1"
 
 [dependencies.bigint]
 version = "4"

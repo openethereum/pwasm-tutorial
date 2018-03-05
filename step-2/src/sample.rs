@@ -12,7 +12,7 @@ extern crate pwasm_abi_derive;
 extern crate bigint;
 
 pub mod token {
-    use pwasm_ethereum::{storage};
+    use pwasm_ethereum;
     use pwasm_std::hash::{H256};
     use bigint::U256;
 
@@ -35,29 +35,27 @@ pub mod token {
     impl TokenContract for TokenContractInstance {
         fn constructor(&mut self, total_supply: U256) {
             // Set up the total supply for the token
-            storage::write(&TOTAL_SUPPLY_KEY, &total_supply.into());
+            pwasm_ethereum::write(&TOTAL_SUPPLY_KEY, &total_supply.into());
         }
 
         fn totalSupply(&mut self) -> U256 {
-            storage::read(&TOTAL_SUPPLY_KEY).into()
+            pwasm_ethereum::read(&TOTAL_SUPPLY_KEY).into()
         }
     }
 }
 // Declares the dispatch and dispatch_ctor methods
 use pwasm_abi::eth::EndpointInterface;
 
-/// The main function receives a pointer for the call descriptor.
 #[no_mangle]
-pub fn call(desc: *mut u8) {
-    let (args, result) = unsafe { pwasm_std::parse_args(desc) };
+pub fn call() {
     let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
     // Read http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding for details
-    result.done(endpoint.dispatch(&args));
+    pwasm_ethereum::ret(&endpoint.dispatch(&pwasm_ethereum::input()));
 }
 
 #[no_mangle]
-pub fn deploy(desc: *mut u8) {
-    let (args, _) = unsafe { pwasm_std::parse_args(desc) };
+pub fn deploy() {
     let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
-    endpoint.dispatch_ctor(&args);
+    //
+    endpoint.dispatch_ctor(&pwasm_ethereum::input());
 }

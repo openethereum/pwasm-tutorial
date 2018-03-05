@@ -4,8 +4,8 @@ version = "0.1.0"
 authors = ["Alexey Frolov <alexey@parity.io>"]
 
 [dependencies]
-pwasm-std = "0.3"
-pwasm-ethereum = { git = "https://github.com/nikvolf/pwasm-ethereum" }
+pwasm-std = "0.5"
+pwasm-ethereum = "0.1"
 
 [lib]
 crate-type = ["cdylib"]
