@@ -326,7 +326,7 @@ pub mod token {
 }
 ```
 
-Events are declared as part a of contract trait definition. Arguments which start with the "indexed_" prefix considered as "topics", other arguments are data associated with event.
+Events are declared as part of a contract trait definition. Arguments which start with the "indexed_" prefix considered as "topics", other arguments are data associated with event.
 
 ```rust
 #[eth_abi(TokenEndpoint, TokenClient)]
