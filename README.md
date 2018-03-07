@@ -22,7 +22,7 @@ cargo install --git https://github.com/paritytech/wasm-utils wasm-build
 ```
 
 ### Parity
-Follow this guide https://github.com/paritytech/parity/wiki/Setup
+Follow this guide https://github.com/paritytech/parity/wiki/Setup.
 Make sure you have installed Parity version 1.9.3 or higher.
 
 ### Web3.js
