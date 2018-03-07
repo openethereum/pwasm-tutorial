@@ -53,8 +53,8 @@ pub fn call() {
     pwasm_ethereum::ret(&b"result".to_vec());
 }
 ```
-### pwasm-std
-[pwasm-std](https://paritytech.github.io/pwasm-std/pwasm_std/) is the lightweight standard library. It implements common data structures, conversion utils and provides bindings to the runtime.
+### pwasm-ethereum
+[pwasm-ethereum](https://github.com/NikVolf/pwasm-ethereum) is a collection of bindings to interact with ethereum-like network.
 
 ## Building
 To make sure that everything is setup go to the `step-0` directory and run:
@@ -96,9 +96,6 @@ pub fn call() {
     pwasm_ethereum::ret(&owner.to_vec());
 }
 ```
-
-### pwasm-ethereum
-[pwasm-ethereum](https://github.com/NikVolf/pwasm-ethereum) is a collection of bindings to interact with ethereum-like network.
 
 ## Contract ABI declaration
 Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-2
@@ -175,6 +172,9 @@ pub trait EndpointInterface {
 The `dispatch` expects `payload` and returns result in format defined in [Solidity ABI spec](http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding). It maps payload to the corresponding method of the `token::TokenContract` implementation. The `dispatch_ctor` maps payload only to the `TokenContract::constructor` and returns no result.
 
 A compete implementation of ERC20 can be found here https://github.com/paritytech/pwasm-token-example.
+
+### pwasm-std
+[pwasm-std](https://paritytech.github.io/pwasm-std/pwasm_std/) is the lightweight standard library. It implements common data structures, conversion utils and provides bindings to the runtime.
 
 ## Make calls to other contracts
 Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-3
