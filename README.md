@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/paritytech/pwasm-tutorial.svg?branch=master)](https://travis-ci.org/paritytech/pwasm-tutorial)
+
 ## Tutorial Prerequisites
 There is a list of all tools and dependencies required for this tutorial.
 
