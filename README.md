@@ -504,3 +504,5 @@ mod tests {
 More testing examples:
 https://github.com/paritytech/pwasm-token-example/blob/master/contract/src/lib.rs#L194
 
+In order to test interaction between contracts we're able to mock callee contract client. See comprehensive here:
+https://github.com/paritytech/pwasm-repo-contract/blob/master/contract/src/lib.rs#L453
