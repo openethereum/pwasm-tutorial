@@ -13,5 +13,5 @@ pub fn deploy() {
 #[no_mangle]
 pub fn call() {
     // Send a result pointer to the runtime
-    pwasm_ethereum::ret(&b"result".to_vec());
+    pwasm_ethereum::ret(&b"result"[..]);
 }
