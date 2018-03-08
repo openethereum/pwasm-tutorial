@@ -20,5 +20,5 @@ pub fn call() {
     // Will read the address of the deployer which we wrote to the storage on the deploy stage
     let owner = pwasm_ethereum::read(&H256::zero().into());
     // Send a result pointer to the runtime
-    pwasm_ethereum::ret(&owner.to_vec());
+    pwasm_ethereum::ret(owner.as_ref());
 }
