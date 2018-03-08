@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/paritytech/pwasm-tutorial.svg?branch=master)](https://travis-ci.org/paritytech/pwasm-tutorial)
-
 ## Tutorial Prerequisites
 There is a list of all tools and dependencies required for this tutorial.
 
@@ -22,8 +20,7 @@ cargo install --git https://github.com/paritytech/wasm-utils wasm-build
 ```
 
 ### Parity
-Follow this guide https://github.com/paritytech/parity/wiki/Setup.
-Make sure you have installed Parity version 1.9.3 or higher.
+Follow this guide https://github.com/paritytech/parity/wiki/Setup
 
 ### Web3.js
 We'll be using `Web3.js` to connect to the Parity node. Use [npm](https://nodejs.org/en/) to install `Web3.js` globally:
@@ -87,6 +84,7 @@ use parity_hash::H256;
 pub fn deploy() {
     // Lets set the sender address to the contract storage at address "0"
     pwasm_ethereum::write(&H256::zero().into(), &H256::from(pwasm_ethereum::sender()).into());
+    // Note we should't write any result into the call descriptor in deploy.
 }
 
 // The following code will be stored on the blockchain.
@@ -381,7 +379,7 @@ Starting from version 1.8 Parity includes support for running Wasm contracts. Wa
         "instantSeal": null
     },
     "params": {
-        "wasm": true,
+        "wasmActivationTransition": "0x01",
         "gasLimitBoundDivisor": "0x0400",
         "accountStartNonce": "0x0",
         "maximumExtraDataSize": "0x20",
