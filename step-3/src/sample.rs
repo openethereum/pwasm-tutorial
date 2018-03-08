@@ -1,26 +1,24 @@
 #![no_std]
 #![allow(non_snake_case)]
-#![feature(alloc)]
 #![feature(proc_macro)]
 
 extern crate parity_hash;
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
-extern crate alloc;
 extern crate pwasm_abi;
 extern crate pwasm_abi_derive;
 /// Bigint used for 256-bit arithmetic
 extern crate bigint;
 
 pub mod token {
+    use pwasm_std::Vec;
     use pwasm_ethereum;
     use parity_hash::H256;
     use bigint::U256;
 
 	// eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
-    use alloc::Vec;
-
+=
     static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
     #[eth_abi(TokenEndpoint, TokenClient)]
