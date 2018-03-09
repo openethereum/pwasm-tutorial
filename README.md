@@ -369,7 +369,7 @@ TokenContract.events.Transfer({
 ```
 
 ## Deploy
-Starting from version 1.8 Parity includes support for running Wasm contracts. Wasm support isn't enabled by default and needs to be specified in the "chainspec" file. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
+Starting from version **1.9.4** Parity includes support for running Wasm contracts. Wasm support isn't enabled by default and needs to be specified in the "chainspec" file. `wasmActivationTransition` param sets a block number Wasm support should be activated. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
 
 [Source](https://github.com/paritytech/pwasm-tutorial/tree/master/wasm-dev-chain.json)
 ```
