@@ -4,7 +4,7 @@ rust:
   - nightly
 before_install:
   - rustup target add wasm32-unknown-unknown
-  - cargo install --git https://github.com/paritytech/wasm-utils wasm-build
+  - cargo install pwasm-utils --version 0.1
 env:
   - TUTOR_DIR=step-0
   - TUTOR_DIR=step-1
