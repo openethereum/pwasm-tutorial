@@ -108,6 +108,8 @@ Let's implement a simple [ERC-20](https://en.wikipedia.org/wiki/ERC20) token con
 pub mod token {
     use pwasm_ethereum;
     use pwasm_std::*;
+    use pwasm_std::hash::H256;
+    use bigint::U256;
 
     // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
