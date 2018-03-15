@@ -14,9 +14,9 @@ rustup target add wasm32-unknown-unknown
 ```
 
 ### Parity wasm-build
-[wasm-build](https://github.com/paritytech/wasm-utils#build-tools-for-cargo) takes the raw `.wasm` file produced by `rustc` compiler, pass it through optimization and packs it into the final Wasm-contract ready for deployment on the chain.
+[wasm-build](https://github.com/paritytech/wasm-utils#build-tools-for-cargo) takes the raw `.wasm` file produced by Rust compiler and packs it to the form of valid contract.
 ```
-cargo install --git https://github.com/paritytech/wasm-utils wasm-build
+cargo install pwasm-utils
 ```
 
 ### Parity
@@ -107,12 +107,10 @@ Let's implement a simple [ERC-20](https://en.wikipedia.org/wiki/ERC20) token con
 
 pub mod token {
     use pwasm_ethereum;
-    use pwasm_std::hash::{H256};
-    use bigint::U256;
+    use pwasm_std::*;
 
     // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
-    use alloc::Vec;
 
     static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
