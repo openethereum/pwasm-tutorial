@@ -57,12 +57,8 @@ pub fn call() {
 [pwasm-ethereum](https://github.com/NikVolf/pwasm-ethereum) is a collection of bindings to interact with ethereum-like network.
 
 ## Building
-To make sure that everything is setup go to the `step-0` directory and run:
+To make sure that everything is setup go to the `step-0` directory and run `./build.sh`
 
-```bash
-cargo build --release --target wasm32-unknown-unknown
-wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract
-```
 As the result the `pwasm_tutorial_contract.wasm` should be placed under the `step-0/target` directory.
 
 ## The constructor
