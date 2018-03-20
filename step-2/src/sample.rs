@@ -16,7 +16,7 @@ pub mod token {
     use pwasm_std::hash::{H256};
     use bigint::U256;
 
-	// eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
+    // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
     use alloc::Vec;
 
@@ -24,7 +24,7 @@ pub mod token {
 
     #[eth_abi(TokenEndpoint)]
     pub trait TokenContract {
-		/// The constructor
+        /// The constructor
         fn constructor(&mut self, _total_supply: U256);
         /// Total amount of tokens
         fn totalSupply(&mut self) -> U256;

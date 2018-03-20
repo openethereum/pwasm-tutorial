@@ -16,14 +16,14 @@ pub mod token {
     use parity_hash::H256;
     use bigint::U256;
 
-	// eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
+    // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
 
     static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
     #[eth_abi(TokenEndpoint, TokenClient)]
     pub trait TokenContract {
-		/// The constructor
+        /// The constructor
         fn constructor(&mut self, _total_supply: U256);
         /// Total amount of tokens
         #[constant]

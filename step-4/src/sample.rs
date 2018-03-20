@@ -17,7 +17,7 @@ pub mod token {
     use pwasm_ethereum;
     use bigint::U256;
 
-	// eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
+    // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
     use alloc::Vec;
 
@@ -25,7 +25,7 @@ pub mod token {
 
     #[eth_abi(TokenEndpoint, TokenClient)]
     pub trait TokenContract {
-		/// The constructor
+        /// The constructor
         fn constructor(&mut self, _total_supply: U256);
         /// Total amount of tokens
         #[constant]
@@ -34,10 +34,10 @@ pub mod token {
         #[constant]
         fn balanceOf(&mut self, _owner: Address) -> U256;
         /// Transfer the balance from owner's account to another account
-	    fn transfer(&mut self, _to: Address, _amount: U256) -> bool;
+        fn transfer(&mut self, _to: Address, _amount: U256) -> bool;
         /// Event declaration
         #[event]
-	    fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
+        fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
     }
 
     pub struct TokenContractInstance;
@@ -53,8 +53,8 @@ pub mod token {
         }
 
         fn balanceOf(&mut self, owner: Address) -> U256 {
-		    read_balance_of(&owner)
-	    }
+            read_balance_of(&owner)
+        }
 
         fn transfer(&mut self, to: Address, amount: U256) -> bool {
             let sender = pwasm_ethereum::sender();
@@ -69,8 +69,8 @@ pub mod token {
                 pwasm_ethereum::write(&balance_key(&to), &new_recipient_balance.into());
                 self.Transfer(sender, to, amount);
                 true
-		    }
-	    }
+            }
+        }
     }
 
     // Reads balance by address
