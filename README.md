@@ -432,6 +432,7 @@ At this point we can use Web.js to connect to the Parity node and deploy Wasm `p
 
 ```javascript
 var Web3 = require("web3");
+var fs = require("fs");
 // Connect to our local node
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 // Setup default account
