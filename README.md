@@ -368,7 +368,7 @@ TokenContract.events.Transfer({
 Starting from version **1.9.4** Parity includes support for running Wasm contracts. Wasm support isn't enabled by default and needs to be specified in the "chainspec" file. `wasmActivationTransition` param sets a block number Wasm support should be activated. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
 
 [Source](https://github.com/paritytech/pwasm-tutorial/tree/master/wasm-dev-chain.json)
-```
+```json
 {
     "name": "DevelopmentChain",
     "engine": {
@@ -415,7 +415,7 @@ Among with other things we've added an account `0x004ec07d2329997267ec62b4166639
 curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user", "user"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8545
 ```
 Should output something like:
-```
+```json
 {"jsonrpc":"2.0","result":"0x004ec07d2329997267ec62b4166639513386f32e","id":0}
 ```
 
