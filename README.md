@@ -59,7 +59,7 @@ pub fn call() {
 ## Building
 To make sure that everything is setup go to the `step-0` directory and run `./build.sh`
 
-As the result the `pwasm_tutorial_contract.wasm` should be placed under the `step-0/target` directory.
+As a result the `pwasm_tutorial_contract.wasm` should be created under the `step-0/target/wasm32-unknown-unknown/release/` directory.
 
 ## The constructor
 Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-1
