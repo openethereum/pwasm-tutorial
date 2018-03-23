@@ -422,8 +422,7 @@ Should output something like:
 
 Now cd to `step-4` and build the contract:
 ```bash
-cargo build --release --target wasm32-unknown-unknown
-wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract
+./build.sh
 ```
 It should produce 2 files we need:
 - a compiled Wasm binary `./target/pwasm_tutorial_contract.wasm`
