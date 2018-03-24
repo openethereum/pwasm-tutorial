@@ -4,8 +4,8 @@ version = "0.1.0"
 authors = ["Alexey Frolov <alexey@parity.io>"]
 
 [dependencies]
-pwasm-std = "0.5"
-pwasm-ethereum = "0.1"
+pwasm-std = "0.6"
+pwasm-ethereum = "0.3"
 pwasm-abi = "0.1"
 pwasm-abi-derive = "0.1"
 
@@ -17,15 +17,16 @@ default-features = false
 version = "1"
 default-features = false
 
-[dev-dependencies]
-pwasm-test = { git = "https://github.com/paritytech/pwasm-test" }
+[dev-dependencies.pwasm-test]
+git = "https://github.com/paritytech/pwasm-test"
+default-features = false
 
 [lib]
 crate-type = ["cdylib"]
 path = "src/sample.rs"
 
 [features]
-std = ["pwasm-std/std", "pwasm-ethereum/std"]
+std = ["pwasm-std/std", "pwasm-ethereum/std", "pwasm-test/std"]
 
 [profile.release]
 panic = "abort"
