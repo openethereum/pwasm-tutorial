@@ -188,7 +188,7 @@ pub trait TokenContract {
 }
 ```
 
-We've added a second argument `TokenClient` to the `eth_abi` macro, so this way we ask to generate a client implementation for `TokenContract` trait and name it as `TokenClient`. Let's suppose we've deployed a token contract on `0xe1EDa226759825E236001714bcDc0ca0B21fd800` address. That's how we can make calls to it.
+We've added a second argument `TokenClient` to the `eth_abi` macro, so this way we ask to generate a client implementation for `TokenContract` trait and name it as `TokenClient`. Let's suppose we've deployed a token contract on `0x7BA4324585CB5597adC283024819254345CD7C62` address. That's how we can make calls to it.
 
 ```rust
 extern pwasm_ethereum;
@@ -197,14 +197,14 @@ extern pwasm_std;
 use token::TokenClient;
 use pwasm_std::hash::Address;
 
-let token = TokenClient::new(Address::from("0xe1EDa226759825E236001714bcDc0ca0B21fd800"));
+let token = TokenClient::new(Address::from("0x7BA4324585CB5597adC283024819254345CD7C62"));
 let tokenSupply = token.totalSupply();
 ```
 
-`token.totalSupply()` will execute `pwasm_ethereum::call(Address::from("0xe1EDa226759825E236001714bcDc0ca0B21fd800"), payload)` with `address` and `payload` generated according to `totalSupply()` signature. Optionally it's possible to set a `value` (in Wei) to transfer with the call and set a `gas` limit.
+`token.totalSupply()` will execute `pwasm_ethereum::call(Address::from("0x7BA4324585CB5597adC283024819254345CD7C62"), payload)` with `address` and `payload` generated according to `totalSupply()` signature. Optionally it's possible to set a `value` (in Wei) to transfer with the call and set a `gas` limit.
 
 ```rust
-let token = TokenClient::new(Address::from("0xe1EDa226759825E236001714bcDc0ca0B21fd800"))
+let token = TokenClient::new(Address::from("0x7BA4324585CB5597adC283024819254345CD7C62"))
 	.value(10000000.into()) // send a value with the call
 	.gas(21000); // set a gas limit
 let tokenSupply = token.totalSupply();
@@ -245,7 +245,7 @@ var Web3 = require("web3");
 var fs = require("fs");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
-var TokenContract = new web3.eth.Contract(abi, "0xe1EDa226759825E236001714bcDc0ca0B21fd800", { from: web3.eth.defaultAccount });
+var TokenContract = new web3.eth.Contract(abi, "0x7BA4324585CB5597adC283024819254345CD7C62", { from: web3.eth.defaultAccount });
 var totalSupply = TokenContract.methods.totalSupply();
 ```
 
@@ -355,11 +355,11 @@ Topics are useful to filter events produced by contract. In following example we
 var Web3 = require("web3");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
-var TokenContract = new web3.eth.Contract(abi, "0xe1EDa226759825E236001714bcDc0ca0B21fd800", { from: web3.eth.defaultAccount });
+var TokenContract = new web3.eth.Contract(abi, "0x7BA4324585CB5597adC283024819254345CD7C62", { from: web3.eth.defaultAccount });
 
 // Subscribe to the Transfer event
 TokenContract.events.Transfer({
-    from: "0xe2fDa626759825E236001714bcDc0ca0B21fd800" // Filter transactions by sender
+    from: "0x7BA4324585CB5597adC283024819254345CD7C62" // Filter transactions by sender
 }, function (err, event) {
     console.log(event);
 });
