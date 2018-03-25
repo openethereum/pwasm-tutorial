@@ -246,7 +246,7 @@ var fs = require("fs");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
 var TokenContract = new web3.eth.Contract(abi, "0x7BA4324585CB5597adC283024819254345CD7C62", { from: web3.eth.defaultAccount });
-var totalSupply = TokenContract.methods.totalSupply();
+var totalSupply = TokenContract.methods.totalSupply().call().then(console.log);
 ```
 
 ### Events
