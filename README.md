@@ -23,9 +23,9 @@ cargo install pwasm-utils
 Follow this guide https://github.com/paritytech/parity/wiki/Setup. You'll need Parity version **1.9.4** or later.
 
 ### Web3.js
-We'll be using `Web3.js` to connect to the Parity node. Use [npm](https://nodejs.org/en/) to install `Web3.js` globally:
+We'll be using `Web3.js` to connect to the Parity node. Change dir to the root `pwasm-tutorial` and run [npm](https://nodejs.org/en/) to install `Web3.js`:
 ```
-npm -g install web3
+npm install
 ```
 
 ### Tutorial source code
