@@ -238,7 +238,7 @@ If you move to `step-3` directory and run `cargo build --release --target wasm32
 ]
 ```
 
-That JSON is an ABI definition which can be used along with Web.js to run transactions and calls to contract:
+JSON above is an ABI definition which can be used along with Web.js to run transactions and calls to contract:
 
 ```javascript
 var Web3 = require("web3");
