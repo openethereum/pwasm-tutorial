@@ -446,7 +446,7 @@ var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").to
 
 var TokenContract = new web3.eth.Contract(abi, { data: codeHex, from: web3.eth.defaultAccount });
 // Will create TokenContract with `totalSupply` = 10000000 and print a result
-TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({from: web3.eth.defaultAccount}).then((a) => console.log(a));
+TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({gasLimit: 6000000, from: web3.eth.defaultAccount}).then((a) => console.log(a));
 ```
 
 ## Testing
