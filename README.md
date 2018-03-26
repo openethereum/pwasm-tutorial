@@ -437,16 +437,34 @@ var fs = require("fs");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 // Setup default account
 web3.eth.defaultAccount = "0x004ec07d2329997267ec62b4166639513386f32e";
-// Unlock account
-web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user");
 // read JSON ABI
 var abi = JSON.parse(fs.readFileSync("./target/json/TokenContract.json"));
 // convert Wasm binary to hex format
 var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").toString('hex');
 
 var TokenContract = new web3.eth.Contract(abi, { data: codeHex, from: web3.eth.defaultAccount });
+
+var TokenDeployTransaction = TokenContract.deploy({data: codeHex, arguments: [10000000]});
+
 // Will create TokenContract with `totalSupply` = 10000000 and print a result
-TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({gasLimit: 5000000, from: web3.eth.defaultAccount}).then((a) => console.log(a));
+web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user").then(() => TokenDeployTransaction.estimateGas()).then(gas => TokenDeployTransaction.send({gasLimit: gas, from: web3.eth.defaultAccount})).then(contract => { console.log("Address of new contract: " + contract.options.address); TokenContract = contract; }).catch(err => console.log(err));
+
+// Now we able transfer some tokens
+
+web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user").then(() => TokenContract.methods.transfer("0x7BA4324585CB5597adC283024819254345CD7C62", 200).send()).then(console.log).catch(console.log);
+```
+Now we're able transfer some tokens:
+```javascript
+web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user").then(() => TokenContract.methods.transfer("0x7BA4324585CB5597adC283024819254345CD7C62", 200).send()).then(console.log).catch(console.log);
+```
+
+And check balances:
+```javascript
+// Check balance of recipient. Should print 200
+TokenContract.methods.balanceOf("0x7BA4324585CB5597adC283024819254345CD7C62").call().then(console.log).catch(console.log);
+
+// Check balance of sender (owner of contract). Should print 10000000 - 200 = 9999800
+TokenContract.methods.balanceOf(web3.eth.defaultAccount).call().then(console.log).catch(console.log);
 ```
 
 ## Testing
