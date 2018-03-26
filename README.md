@@ -459,7 +459,7 @@ And check balances:
 // Check balance of recipient. Should print 200
 TokenContract.methods.balanceOf("0x7BA4324585CB5597adC283024819254345CD7C62").call().then(console.log).catch(console.log);
 
-// Check balance of sender (owner of contract). Should print 10000000 - 200 = 9999800
+// Check balance of sender (owner of the contract). Should print 10000000 - 200 = 9999800
 TokenContract.methods.balanceOf(web3.eth.defaultAccount).call().then(console.log).catch(console.log);
 ```
 
