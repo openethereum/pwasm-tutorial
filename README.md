@@ -448,10 +448,6 @@ var TokenDeployTransaction = TokenContract.deploy({data: codeHex, arguments: [10
 
 // Will create TokenContract with `totalSupply` = 10000000 and print a result
 web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user").then(() => TokenDeployTransaction.estimateGas()).then(gas => TokenDeployTransaction.send({gasLimit: gas, from: web3.eth.defaultAccount})).then(contract => { console.log("Address of new contract: " + contract.options.address); TokenContract = contract; }).catch(err => console.log(err));
-
-// Now we able transfer some tokens
-
-web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user").then(() => TokenContract.methods.transfer("0x7BA4324585CB5597adC283024819254345CD7C62", 200).send()).then(console.log).catch(console.log);
 ```
 Now we're able transfer some tokens:
 ```javascript
