@@ -365,8 +365,10 @@ TokenContract.events.Transfer({
 });
 ```
 
-## Deploy
-Starting from version **1.9.4** Parity includes support for running Wasm contracts. Wasm support isn't enabled by default and needs to be specified in the "chainspec" file. `wasmActivationTransition` param sets a block number Wasm support should be activated. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
+## Run development node
+Starting from version **1.9.4** Parity includes support for running Wasm contracts.
+
+Wasm support isn't enabled by default and needs to be specified in the "chainspec" file. `wasmActivationTransition` param sets a block number Wasm support should be activated. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
 
 [Source](https://github.com/paritytech/pwasm-tutorial/tree/master/wasm-dev-chain.json)
 ```json
@@ -404,10 +406,16 @@ Starting from version **1.9.4** Parity includes support for running Wasm contrac
 }
 
 ```
-Run Parity:
+Run:
 ```bash
 parity --chain ./wasm-dev-chain.json --jsonrpc-apis=all
 ```
+## Run Kovan node
+```bash
+parity --kovan
+```
+## Deploy
+
 Let it run in a separate terminal window.
 
 Among with other things we've added an account `0x004ec07d2329997267ec62b4166639513386f32e` with some ETH to `wasm-dev-chain.json` on which behalf we'll run transactions. Now we need to add this account to the local keychain:
