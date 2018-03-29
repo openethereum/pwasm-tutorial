@@ -365,7 +365,10 @@ TokenContract.events.Transfer({
 });
 ```
 
-## Run development node
+## Run node and deploy conract
+Now it's time to deploy our Wasm contract on the blockchain. We can ether test in own local development chain or publish it on the public Kovan network.
+
+### Option 1: setup and run development node
 Starting from version **1.9.4** Parity includes support for running Wasm contracts.
 
 Wasm support isn't enabled by default and needs to be specified in the "chainspec" file. `wasmActivationTransition` param sets a block number Wasm support should be activated. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
@@ -404,21 +407,13 @@ Wasm support isn't enabled by default and needs to be specified in the "chainspe
         "0x004ec07d2329997267ec62b4166639513386f32e": { "balance": "1606938044258990275541962092341162602522202993782792835301376" }
     }
 }
-
 ```
-Run:
+Run node:
 ```bash
 parity --chain ./wasm-dev-chain.json --jsonrpc-apis=all
 ```
-## Run Kovan node
-```bash
-parity --kovan
-```
-## Deploy
 
-Let it run in a separate terminal window.
-
-Among with other things we've added an account `0x004ec07d2329997267ec62b4166639513386f32e` with some ETH to `wasm-dev-chain.json` on which behalf we'll run transactions. Now we need to add this account to the local keychain:
+Among with other things we've set balance for `0x004ec07d2329997267ec62b4166639513386f32e` account on which behalf we'll run transactions (such as deploy). This should add an above account to the keychain:
 
 ```bash
 curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user", "user"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8545
@@ -427,6 +422,16 @@ Should output something like:
 ```json
 {"jsonrpc":"2.0","result":"0x004ec07d2329997267ec62b4166639513386f32e","id":0}
 ```
+
+### Option 2: Run Kovan node
+At block `6600000` (March 28, 2018) the support for Wasm contracts execution was activated on Kovan network. This will run Parity node on Kovan:
+```bash
+parity --chain kovan
+```
+When it sync up follow `https://github.com/kovan-testnet/faucet` to setup an account with some Kovan ETH to be able to pay gas for transactions.
+
+### Deploy
+Let Parity run in a separate terminal window.
 
 Now cd to `step-4` and build the contract:
 ```bash
@@ -443,7 +448,7 @@ var Web3 = require("web3");
 var fs = require("fs");
 // Connect to our local node
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-// Setup default account
+// NOTE: if you run Kovan node there should be an address you've got in the "Option 2: Run Kovan node" step
 web3.eth.defaultAccount = "0x004ec07d2329997267ec62b4166639513386f32e";
 // read JSON ABI
 var abi = JSON.parse(fs.readFileSync("./target/json/TokenContract.json"));
