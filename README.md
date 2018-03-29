@@ -366,7 +366,7 @@ TokenContract.events.Transfer({
 ```
 
 ## Run node and deploy conract
-Now it's time to deploy our Wasm contract on the blockchain. We can ether test in own local development chain or publish it on the public Kovan network.
+Now it's time to deploy our Wasm contract on the blockchain. We can ether test in own [local development chain](#option-1-setup-and-run-development-node) or publish it on the [public Kovan network](#option-2-run-kovan-node).
 
 ### Option 1: setup and run development node
 Starting from version **1.9.4** Parity includes support for running Wasm contracts.
@@ -423,7 +423,7 @@ Should output something like:
 {"jsonrpc":"2.0","result":"0x004ec07d2329997267ec62b4166639513386f32e","id":0}
 ```
 
-### Option 2: Run Kovan node
+### Option 2: run Kovan node
 At block `6600000` (March 28, 2018) the support for Wasm contracts execution was activated on Kovan network. This will run Parity node on Kovan:
 ```bash
 parity --chain kovan
