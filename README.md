@@ -20,7 +20,7 @@ cargo install pwasm-utils
 ```
 
 ### Parity
-Follow this guide https://github.com/paritytech/parity/wiki/Setup. You'll need Parity version **1.9.4** or later.
+Follow this guide https://github.com/paritytech/parity/wiki/Setup. You'll need Parity version **1.9.5** or later.
 
 ### Web3.js
 We'll be using `Web3.js` to connect to the Parity node. Change dir to the root `pwasm-tutorial` and run [npm](https://nodejs.org/en/) to install `Web3.js`:
@@ -366,7 +366,7 @@ TokenContract.events.Transfer({
 ```
 
 ## Run node and deploy conract
-Now it's time to deploy our Wasm contract on the blockchain. We can ether test in own [local development chain](#option-1-setup-and-run-development-node) or publish it on the [public Kovan network](#option-2-run-kovan-node).
+Now it's time to deploy our Wasm contract on the blockchain. We can ether test in own local development chain or publish it on the public Kovan network.
 
 ### Option 1: Setup and run development node
 Parity **1.9.5** includes support for running Wasm contracts.
