@@ -377,7 +377,7 @@ Kovan network supports Wasm contracts. This will run Parity node on Kovan:
 ```bash
 parity --chain kovan
 ```
-When it sync up follow `https://github.com/kovan-testnet/faucet` to setup an account with some Kovan ETH to be able to pay gas for transactions.
+When it sync up follow https://github.com/kovan-testnet/faucet to setup an account with some Kovan ETH to be able to pay gas for transactions.
 
 ### Deploy
 Let Parity run in a separate terminal window.
