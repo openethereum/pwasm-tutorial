@@ -20,7 +20,7 @@ cargo install pwasm-utils
 ```
 
 ### Parity
-Follow this guide https://github.com/paritytech/parity/wiki/Setup. You'll need Parity version **1.9.4** or later.
+Follow this guide https://github.com/paritytech/parity/wiki/Setup. You'll need Parity version **1.9.5** or later.
 
 ### Web3.js
 We'll be using `Web3.js` to connect to the Parity node. Change dir to the root `pwasm-tutorial` and run [npm](https://nodejs.org/en/) to install `Web3.js`:
@@ -365,60 +365,22 @@ TokenContract.events.Transfer({
 });
 ```
 
-## Deploy
-Starting from version **1.9.4** Parity includes support for running Wasm contracts. Wasm support isn't enabled by default and needs to be specified in the "chainspec" file. `wasmActivationTransition` param sets a block number Wasm support should be activated. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
+## Run node and deploy conract
+Now it's time to deploy our Wasm contract on the blockchain. We can ether test in own local development chain or publish it on the public Kovan network.
 
-[Source](https://github.com/paritytech/pwasm-tutorial/tree/master/wasm-dev-chain.json)
-```json
-{
-    "name": "DevelopmentChain",
-    "engine": {
-        "instantSeal": null
-    },
-    "params": {
-        "wasmActivationTransition": "0x01",
-        "gasLimitBoundDivisor": "0x0400",
-        "accountStartNonce": "0x0",
-        "maximumExtraDataSize": "0x20",
-        "minGasLimit": "0x1388",
-        "networkID" : "0x11"
-    },
-    "genesis": {
-        "seal": {
-            "generic": "0x0"
-        },
-        "difficulty": "0x20000",
-        "author": "0x0000000000000000000000000000000000000000",
-        "timestamp": "0x00",
-        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "extraData": "0x",
-        "gasLimit": "0x5B8D80"
-    },
-    "accounts": {
-        "0000000000000000000000000000000000000001": { "balance": "1", "builtin": { "name": "ecrecover", "pricing": { "linear": { "base": 3000, "word": 0 } } } },
-        "0000000000000000000000000000000000000002": { "balance": "1", "builtin": { "name": "sha256", "pricing": { "linear": { "base": 60, "word": 12 } } } },
-        "0000000000000000000000000000000000000003": { "balance": "1", "builtin": { "name": "ripemd160", "pricing": { "linear": { "base": 600, "word": 120 } } } },
-        "0000000000000000000000000000000000000004": { "balance": "1", "builtin": { "name": "identity", "pricing": { "linear": { "base": 15, "word": 3 } } } },
-        "0x004ec07d2329997267ec62b4166639513386f32e": { "balance": "1606938044258990275541962092341162602522202993782792835301376" }
-    }
-}
+### Option 1: Setup and run development node
+Parity **1.9.5** includes support for running Wasm contracts.
+See [instructions](dev-node-setup.md) on how to setup a Wasm-enabled dev node.
 
-```
-Run Parity:
+### Option 2: Run Kovan node
+Kovan network supports Wasm contracts. This will run Parity node on Kovan:
 ```bash
-parity --chain ./wasm-dev-chain.json --jsonrpc-apis=all
+parity --chain kovan
 ```
-Let it run in a separate terminal window.
+When it sync up follow `https://github.com/kovan-testnet/faucet` to setup an account with some Kovan ETH to be able to pay gas for transactions.
 
-Among with other things we've added an account `0x004ec07d2329997267ec62b4166639513386f32e` with some ETH to `wasm-dev-chain.json` on which behalf we'll run transactions. Now we need to add this account to the local keychain:
-
-```bash
-curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user", "user"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8545
-```
-Should output something like:
-```json
-{"jsonrpc":"2.0","result":"0x004ec07d2329997267ec62b4166639513386f32e","id":0}
-```
+### Deploy
+Let Parity run in a separate terminal window.
 
 Now cd to `step-4` and build the contract:
 ```bash
@@ -435,7 +397,7 @@ var Web3 = require("web3");
 var fs = require("fs");
 // Connect to our local node
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-// Setup default account
+// NOTE: if you run Kovan node there should be an address you've got in the "Option 2: Run Kovan node" step
 web3.eth.defaultAccount = "0x004ec07d2329997267ec62b4166639513386f32e";
 // read JSON ABI
 var abi = JSON.parse(fs.readFileSync("./target/json/TokenContract.json"));
