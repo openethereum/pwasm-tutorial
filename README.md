@@ -8,7 +8,7 @@ There is a list of all tools and dependencies required for this tutorial.
 rustup install nightly
 ```
 
-Also we need to install `wasm32-unknown-unknown` to compile contract to Wasm:
+Also, we need to install `wasm32-unknown-unknown` to compile contract to Wasm:
 ```bash
 rustup target add wasm32-unknown-unknown
 ```
@@ -57,14 +57,14 @@ pub fn call() {
 [pwasm-ethereum](https://github.com/NikVolf/pwasm-ethereum) is a collection of bindings to interact with ethereum-like network.
 
 ## Building
-To make sure that everything is setup go to the `step-0` directory and run `./build.sh`
+To make sure that everything is set up go to the `step-0` directory and run `./build.sh`
 
-As the result the `pwasm_tutorial_contract.wasm` should be placed under the `step-0/target` directory.
+As the result, the `pwasm_tutorial_contract.wasm` should be placed under the `step-0/target` directory.
 
 ## The constructor
 Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-1
 
-When deploying a contract we often want to set its ititial storage values (e.g. `totalSupply` if it's a token contact). To address this problem we are exporting another function "deploy" which executes only once on contract deployment.
+When deploying a contract we often want to set its initial storage values (e.g. `totalSupply` if it's a token contact). To address this problem we are exporting another function "deploy" which executes only once on contract deployment.
 
 ```rust
 // This contract will return the address from which it was deployed
@@ -167,7 +167,7 @@ pub trait EndpointInterface {
 
 The `dispatch` expects `payload` and returns a result in the format defined in [Solidity ABI spec](http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding). It maps payload to the corresponding method of the `token::TokenContract` implementation. The `dispatch_ctor` maps payload only to the `TokenContract::constructor` and returns no result.
 
-A compete implementation of ERC20 can be found here https://github.com/paritytech/pwasm-token-example.
+A complete implementation of ERC20 can be found here https://github.com/paritytech/pwasm-token-example.
 
 ### pwasm-std
 [pwasm-std](https://paritytech.github.io/pwasm-std/pwasm_std/) is the lightweight standard library. It implements common data structures, conversion utils and provides bindings to the runtime.
@@ -365,7 +365,7 @@ TokenContract.events.Transfer({
 });
 ```
 
-## Run node and deploy conract
+## Run node and deploy contract
 Now it's time to deploy our Wasm contract on the blockchain. We can ether test in own local development chain or publish it on the public Kovan network.
 
 ### Option 1: Setup and run development node
@@ -377,7 +377,7 @@ Kovan network supports Wasm contracts. This will run Parity node on Kovan:
 ```bash
 parity --chain kovan
 ```
-When it sync up follow https://github.com/kovan-testnet/faucet to setup an account with some Kovan ETH to be able to pay gas for transactions.
+When it syncs up follow https://github.com/kovan-testnet/faucet to set up an account with some Kovan ETH to be able to pay gas for transactions.
 
 ### Deploy
 Let Parity run in a separate terminal window.
@@ -477,5 +477,5 @@ mod tests {
 More testing examples:
 https://github.com/paritytech/pwasm-token-example/blob/master/contract/src/lib.rs#L194
 
-In order to test interaction between contracts we're able to mock callee contract client. See comprehensive here:
+In order to test the interaction between contracts, we're able to mock callee contract client. See comprehensive here:
 https://github.com/paritytech/pwasm-repo-contract/blob/master/contract/src/lib.rs#L453
