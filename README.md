@@ -151,7 +151,7 @@ pub fn deploy() {
 }
 
 ```
-`token::TokenContract` is the interface definition of the contract.
+`token::TokenContract` is an interface definition of the contract.
 `pwasm_abi_derive::eth_abi` is a [procedural macros](https://doc.rust-lang.org/book/first-edition/procedural-macros.html) uses a trait `token::TokenContract` to generate decoder (`TokenEndpoint`) for payload in Solidity ABI format. `TokenEndpoint` implements an `EndpointInterface` trait:
 
 ```rust
