@@ -1,0 +1,22 @@
+{
+  "name": "pwasm-tutorial",
+  "version": "1.0.0",
+  "description": "There is a list of all tools and dependencies required for this tutorial.",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fckt/pwasm-tutorial.git"
+  },
+  "author": "Alexey Frolov <frol.rage@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fckt/pwasm-tutorial/issues"
+  },
+  "homepage": "https://github.com/fckt/pwasm-tutorial#readme",
+  "dependencies": {
+    "web3": "^1.0.0-beta.33"
+  }
+}

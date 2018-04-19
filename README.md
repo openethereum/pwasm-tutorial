@@ -8,7 +8,7 @@ There is a list of all tools and dependencies required for this tutorial.
 rustup install nightly
 ```
 
-Also we need to install `wasm32-unknown-unknown` to compile contract to Wasm:
+Also, we need to install `wasm32-unknown-unknown` to compile contract to Wasm:
 ```bash
 rustup target add wasm32-unknown-unknown
 ```
@@ -20,12 +20,12 @@ cargo install pwasm-utils
 ```
 
 ### Parity
-Follow this guide https://github.com/paritytech/parity/wiki/Setup. You'll need Parity version **1.9.4** or later.
+Follow this guide https://github.com/paritytech/parity/wiki/Setup. You'll need Parity version **1.9.5** or later.
 
 ### Web3.js
-We'll be using `Web3.js` to connect to the Parity node. Use [npm](https://nodejs.org/en/) to install `Web3.js` globally:
+We'll be using `Web3.js` to connect to the Parity node. Change dir to the root `pwasm-tutorial` and run [npm](https://nodejs.org/en/) to install `Web3.js`:
 ```
-npm -g install web3
+npm install
 ```
 
 ### Tutorial source code
@@ -57,14 +57,14 @@ pub fn call() {
 [pwasm-ethereum](https://github.com/NikVolf/pwasm-ethereum) is a collection of bindings to interact with ethereum-like network.
 
 ## Building
-To make sure that everything is setup go to the `step-0` directory and run `./build.sh`
+To make sure that everything is set up go to the `step-0` directory and run `./build.sh`
 
 As a result the `pwasm_tutorial_contract.wasm` should be created under the `step-0/target/wasm32-unknown-unknown/release/` directory.
 
 ## The constructor
 Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-1
 
-When deploying a contract we often want to set its ititial storage values (e.g. `totalSupply` if it's a token contact). To address this problem we are exporting another function "deploy" which executes only once on contract deployment.
+When deploying a contract we often want to set its initial storage values (e.g. `totalSupply` if it's a token contact). To address this problem we are exporting another function "deploy" which executes only once on contract deployment.
 
 ```rust
 // This contract will return the address from which it was deployed
@@ -151,7 +151,7 @@ pub fn deploy() {
 }
 
 ```
-`token::TokenContract` is the interface definition of the contract.
+`token::TokenContract` is an interface definition of the contract.
 `pwasm_abi_derive::eth_abi` is a [procedural macros](https://doc.rust-lang.org/book/first-edition/procedural-macros.html) uses a trait `token::TokenContract` to generate decoder (`TokenEndpoint`) for payload in Solidity ABI format. `TokenEndpoint` implements an `EndpointInterface` trait:
 
 ```rust
@@ -165,9 +165,9 @@ pub trait EndpointInterface {
 }
 ```
 
-The `dispatch` expects `payload` and returns result in format defined in [Solidity ABI spec](http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding). It maps payload to the corresponding method of the `token::TokenContract` implementation. The `dispatch_ctor` maps payload only to the `TokenContract::constructor` and returns no result.
+The `dispatch` expects `payload` and returns a result in the format defined in [Solidity ABI spec](http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding). It maps payload to the corresponding method of the `token::TokenContract` implementation. The `dispatch_ctor` maps payload only to the `TokenContract::constructor` and returns no result.
 
-A compete implementation of ERC20 can be found here https://github.com/paritytech/pwasm-token-example.
+A complete implementation of ERC20 can be found here https://github.com/paritytech/pwasm-token-example.
 
 ### pwasm-std
 [pwasm-std](https://paritytech.github.io/pwasm-std/pwasm_std/) is the lightweight standard library. It implements common data structures, conversion utils and provides bindings to the runtime.
@@ -188,7 +188,7 @@ pub trait TokenContract {
 }
 ```
 
-We've added a second argument `TokenClient` to the `eth_abi` macro, so this way we ask to generate a client implementation for `TokenContract` trait and name it as `TokenClient`. Let's suppose we've deployed a token contract on `0xe1EDa226759825E236001714bcDc0ca0B21fd800` address. That's how we can make calls to it.
+We've added a second argument `TokenClient` to the `eth_abi` macro, so this way we ask to generate a client implementation for `TokenContract` trait and name it as `TokenClient`. Let's suppose we've deployed a token contract on `0x7BA4324585CB5597adC283024819254345CD7C62` address. That's how we can make calls to it.
 
 ```rust
 extern pwasm_ethereum;
@@ -197,14 +197,14 @@ extern pwasm_std;
 use token::TokenClient;
 use pwasm_std::hash::Address;
 
-let token = TokenClient::new(Address::from("0xe1EDa226759825E236001714bcDc0ca0B21fd800"));
+let token = TokenClient::new(Address::from("0x7BA4324585CB5597adC283024819254345CD7C62"));
 let tokenSupply = token.totalSupply();
 ```
 
-`token.totalSupply()` will execute `pwasm_ethereum::call(Address::from("0xe1EDa226759825E236001714bcDc0ca0B21fd800"), payload)` with `address` and `payload` generated according to `totalSupply()` signature. Optionally it's possible to set a `value` (in Wei) to transfer with the call and set a `gas` limit.
+`token.totalSupply()` will execute `pwasm_ethereum::call(Address::from("0x7BA4324585CB5597adC283024819254345CD7C62"), payload)` with `address` and `payload` generated according to `totalSupply()` signature. Optionally it's possible to set a `value` (in Wei) to transfer with the call and set a `gas` limit.
 
 ```rust
-let token = TokenClient::new(Address::from("0xe1EDa226759825E236001714bcDc0ca0B21fd800"))
+let token = TokenClient::new(Address::from("0x7BA4324585CB5597adC283024819254345CD7C62"))
 	.value(10000000.into()) // send a value with the call
 	.gas(21000); // set a gas limit
 let tokenSupply = token.totalSupply();
@@ -238,15 +238,15 @@ If you move to `step-3` directory and run `cargo build --release --target wasm32
 ]
 ```
 
-That JSON is an ABI definition which can be used along with Web.js to run transactions and calls to contract:
+JSON above is an ABI definition which can be used along with Web.js to run transactions and calls to contract:
 
 ```javascript
 var Web3 = require("web3");
 var fs = require("fs");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
-var TokenContract = new web3.eth.Contract(abi, "0xe1EDa226759825E236001714bcDc0ca0B21fd800", { from: web3.eth.defaultAccount });
-var totalSupply = TokenContract.methods.totalSupply();
+var TokenContract = new web3.eth.Contract(abi, "0x7BA4324585CB5597adC283024819254345CD7C62", { from: web3.eth.defaultAccount });
+var totalSupply = TokenContract.methods.totalSupply().call().then(console.log);
 ```
 
 ### Events
@@ -355,75 +355,36 @@ Topics are useful to filter events produced by contract. In following example we
 var Web3 = require("web3");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
-var TokenContract = new web3.eth.Contract(abi, "0xe1EDa226759825E236001714bcDc0ca0B21fd800", { from: web3.eth.defaultAccount });
+var TokenContract = new web3.eth.Contract(abi, "0x7BA4324585CB5597adC283024819254345CD7C62", { from: web3.eth.defaultAccount });
 
 // Subscribe to the Transfer event
 TokenContract.events.Transfer({
-    from: "0xe2fDa626759825E236001714bcDc0ca0B21fd800" // Filter transactions by sender
+    from: "0x7BA4324585CB5597adC283024819254345CD7C62" // Filter transactions by sender
 }, function (err, event) {
     console.log(event);
 });
 ```
 
-## Deploy
-Starting from version **1.9.4** Parity includes support for running Wasm contracts. Wasm support isn't enabled by default and needs to be specified in the "chainspec" file. `wasmActivationTransition` param sets a block number Wasm support should be activated. This is a sample "development chain" spec with Wasm enabled (based on https://paritytech.github.io/wiki/Private-development-chain):
+## Run node and deploy contract
+Now it's time to deploy our Wasm contract on the blockchain. We can ether test in own local development chain or publish it on the public Kovan network.
 
-[Source](https://github.com/paritytech/pwasm-tutorial/tree/master/wasm-dev-chain.json)
-```json
-{
-    "name": "DevelopmentChain",
-    "engine": {
-        "instantSeal": null
-    },
-    "params": {
-        "wasmActivationTransition": "0x01",
-        "gasLimitBoundDivisor": "0x0400",
-        "accountStartNonce": "0x0",
-        "maximumExtraDataSize": "0x20",
-        "minGasLimit": "0x1388",
-        "networkID" : "0x11"
-    },
-    "genesis": {
-        "seal": {
-            "generic": "0x0"
-        },
-        "difficulty": "0x20000",
-        "author": "0x0000000000000000000000000000000000000000",
-        "timestamp": "0x00",
-        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "extraData": "0x",
-        "gasLimit": "0x5B8D80"
-    },
-    "accounts": {
-        "0000000000000000000000000000000000000001": { "balance": "1", "builtin": { "name": "ecrecover", "pricing": { "linear": { "base": 3000, "word": 0 } } } },
-        "0000000000000000000000000000000000000002": { "balance": "1", "builtin": { "name": "sha256", "pricing": { "linear": { "base": 60, "word": 12 } } } },
-        "0000000000000000000000000000000000000003": { "balance": "1", "builtin": { "name": "ripemd160", "pricing": { "linear": { "base": 600, "word": 120 } } } },
-        "0000000000000000000000000000000000000004": { "balance": "1", "builtin": { "name": "identity", "pricing": { "linear": { "base": 15, "word": 3 } } } },
-        "0x004ec07d2329997267ec62b4166639513386f32e": { "balance": "1606938044258990275541962092341162602522202993782792835301376" }
-    }
-}
+### Option 1: Setup and run development node
+Parity **1.9.5** includes support for running Wasm contracts.
+See [instructions](dev-node-setup.md) on how to setup a Wasm-enabled dev node.
 
-```
-Run Parity:
+### Option 2: Run Kovan node
+Kovan network supports Wasm contracts. This will run Parity node on Kovan:
 ```bash
-parity --chain ./wasm-dev-chain.json --jsonrpc-apis=all
+parity --chain kovan
 ```
-Let it run in a separate terminal window.
+When it syncs up follow https://github.com/kovan-testnet/faucet to set up an account with some Kovan ETH to be able to pay gas for transactions.
 
-Among with other things we've added an account `0x004ec07d2329997267ec62b4166639513386f32e` with some ETH to `wasm-dev-chain.json` on which behalf we'll run transactions. Now we need to add this account to the local keychain:
-
-```bash
-curl --data '{"jsonrpc":"2.0","method":"parity_newAccountFromPhrase","params":["user", "user"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8545
-```
-Should output something like:
-```json
-{"jsonrpc":"2.0","result":"0x004ec07d2329997267ec62b4166639513386f32e","id":0}
-```
+### Deploy
+Let Parity run in a separate terminal window.
 
 Now cd to `step-4` and build the contract:
 ```bash
-cargo build --release --target wasm32-unknown-unknown
-wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract
+./build.sh
 ```
 It should produce 2 files we need:
 - a compiled Wasm binary `./target/pwasm_tutorial_contract.wasm`
@@ -436,24 +397,38 @@ var Web3 = require("web3");
 var fs = require("fs");
 // Connect to our local node
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-// Setup default account
+// NOTE: if you run Kovan node there should be an address you've got in the "Option 2: Run Kovan node" step
 web3.eth.defaultAccount = "0x004ec07d2329997267ec62b4166639513386f32e";
-// Unlock account
-web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user");
 // read JSON ABI
 var abi = JSON.parse(fs.readFileSync("./target/json/TokenContract.json"));
 // convert Wasm binary to hex format
 var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").toString('hex');
 
 var TokenContract = new web3.eth.Contract(abi, { data: codeHex, from: web3.eth.defaultAccount });
+
+var TokenDeployTransaction = TokenContract.deploy({data: codeHex, arguments: [10000000]});
+
 // Will create TokenContract with `totalSupply` = 10000000 and print a result
-TokenContract.deploy({data: codeHex, arguments: [10000000]}).send({from: web3.eth.defaultAccount}).then((a) => console.log(a));
+web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user").then(() => TokenDeployTransaction.estimateGas()).then(gas => TokenDeployTransaction.send({gasLimit: gas, from: web3.eth.defaultAccount})).then(contract => { console.log("Address of new contract: " + contract.options.address); TokenContract = contract; }).catch(err => console.log(err));
+```
+Now we're able transfer some tokens:
+```javascript
+web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user").then(() => TokenContract.methods.transfer("0x7BA4324585CB5597adC283024819254345CD7C62", 200).send()).then(console.log).catch(console.log);
+```
+
+And check balances:
+```javascript
+// Check balance of recipient. Should print 200
+TokenContract.methods.balanceOf("0x7BA4324585CB5597adC283024819254345CD7C62").call().then(console.log).catch(console.log);
+
+// Check balance of sender (owner of the contract). Should print 10000000 - 200 = 9999800
+TokenContract.methods.balanceOf(web3.eth.defaultAccount).call().then(console.log).catch(console.log);
 ```
 
 ## Testing
-[pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test a contract logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
+[pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test a contract's logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
 
-By default our contracts built with a `#![no_std]`, but `rust test` need the Rust stdlib for treading and i/o. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/paritytech/pwasm-tutorial/tree/master/step-5):
+By default our contracts built with `#![no_std]`, but `rust test` need the Rust stdlib for treading and i/o. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/paritytech/pwasm-tutorial/tree/master/step-5):
 
 ```
 [features]
@@ -502,5 +477,5 @@ mod tests {
 More testing examples:
 https://github.com/paritytech/pwasm-token-example/blob/master/contract/src/lib.rs#L194
 
-In order to test interaction between contracts we're able to mock callee contract client. See comprehensive here:
+In order to test the interaction between contracts, we're able to mock callee contract client. See comprehensive here:
 https://github.com/paritytech/pwasm-repo-contract/blob/master/contract/src/lib.rs#L453
