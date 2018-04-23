@@ -436,7 +436,7 @@ std = ["pwasm-std/std", "pwasm-ethereum/std"]
 ```
 Now you can `cd step-5` and `cargo test --features std` should pass.
 
-Take a look https://github.com/paritytech/pwasm-tutorial/blob/master/step-5/src/sample.rs#L116-L161 to see an example how to test a `transfer` method of our token contract.
+Take a look https://github.com/paritytech/pwasm-tutorial/blob/master/step-5/src/lib.rs#L116-L161 to see an example how to test a `transfer` method of our token contract.
 
 ```rust
 #[cfg(test)]
