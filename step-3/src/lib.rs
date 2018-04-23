@@ -22,7 +22,7 @@ pub mod token {
     static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
     #[eth_abi(TokenEndpoint, TokenClient)]
-    pub trait TokenContract {
+    pub trait TokenInterface {
         /// The constructor
         fn constructor(&mut self, _total_supply: U256);
         /// Total amount of tokens
@@ -30,9 +30,9 @@ pub mod token {
         fn totalSupply(&mut self) -> U256;
     }
 
-    pub struct TokenContractInstance;
+    pub struct TokenContract;
 
-    impl TokenContract for TokenContractInstance {
+    impl TokenInterface for TokenContract {
         fn constructor(&mut self, total_supply: U256) {
             // Set up the total supply for the token
             pwasm_ethereum::write(&TOTAL_SUPPLY_KEY, &total_supply.into());
@@ -48,13 +48,13 @@ use pwasm_abi::eth::EndpointInterface;
 
 #[no_mangle]
 pub fn call() {
-    let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
+    let mut endpoint = token::TokenEndpoint::new(token::TokenContract{});
     // Read http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding for details
     pwasm_ethereum::ret(&endpoint.dispatch(&pwasm_ethereum::input()));
 }
 
 #[no_mangle]
 pub fn deploy() {
-    let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
+    let mut endpoint = token::TokenEndpoint::new(token::TokenContract{});
     endpoint.dispatch_ctor(&pwasm_ethereum::input());
 }

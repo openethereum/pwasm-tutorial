@@ -113,16 +113,16 @@ pub mod token {
     static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
     #[eth_abi(TokenEndpoint)]
-    pub trait TokenContract {
+    pub trait TokenInterface {
 	/// The constructor
         fn constructor(&mut self, _total_supply: U256);
         /// Total amount of tokens
         fn totalSupply(&mut self) -> U256;
     }
 
-    pub struct TokenContractInstance;
+    pub struct TokenContract;
 
-    impl TokenContract for TokenContractInstance {
+    impl TokenInterface for TokenContract {
         fn constructor(&mut self, total_supply: U256) {
             // Set up the total supply for the token
             pwasm_ethereum::write(&TOTAL_SUPPLY_KEY, &total_supply.into());
@@ -138,21 +138,21 @@ use pwasm_abi::eth::EndpointInterface;
 
 #[no_mangle]
 pub fn call() {
-    let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
+    let mut endpoint = token::TokenEndpoint::new(token::TokenContract{});
     // Read http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding for details
     pwasm_ethereum::ret(&endpoint.dispatch(&pwasm_ethereum::input()));
 }
 
 #[no_mangle]
 pub fn deploy() {
-    let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
+    let mut endpoint = token::TokenEndpoint::new(token::TokenContract{});
     //
     endpoint.dispatch_ctor(&pwasm_ethereum::input());
 }
 
 ```
-`token::TokenContract` is an interface definition of the contract.
-`pwasm_abi_derive::eth_abi` is a [procedural macros](https://doc.rust-lang.org/book/first-edition/procedural-macros.html) uses a trait `token::TokenContract` to generate decoder (`TokenEndpoint`) for payload in Solidity ABI format. `TokenEndpoint` implements an `EndpointInterface` trait:
+`token::TokenInterface` is an interface definition of the contract.
+`pwasm_abi_derive::eth_abi` is a [procedural macros](https://doc.rust-lang.org/book/first-edition/procedural-macros.html) uses a trait `token::TokenIntergace` to generate decoder (`TokenEndpoint`) for payload in Solidity ABI format. `TokenEndpoint` implements an `EndpointInterface` trait:
 
 ```rust
 /// Endpoint interface for contracts
@@ -165,7 +165,7 @@ pub trait EndpointInterface {
 }
 ```
 
-The `dispatch` expects `payload` and returns a result in the format defined in [Solidity ABI spec](http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding). It maps payload to the corresponding method of the `token::TokenContract` implementation. The `dispatch_ctor` maps payload only to the `TokenContract::constructor` and returns no result.
+The `dispatch` expects `payload` and returns a result in the format defined in [Solidity ABI spec](http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding). It maps payload to the corresponding method of the `token::TokenInterface` implementation. The `dispatch_ctor` maps payload only to the `TokenInterface::constructor` and returns no result.
 
 A complete implementation of ERC20 can be found here https://github.com/paritytech/pwasm-token-example.
 
@@ -175,11 +175,11 @@ A complete implementation of ERC20 can be found here https://github.com/parityte
 ## Make calls to other contracts
 Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-3
 
-In order to make calls to our `TokenContract` we need to generate the payload `TokenEndpoint::dispatch()` expects. So `pwasm_abi_derive::eth_abi` can generate an implementation of `TokenContract` which will prepare payload for each method.
+In order to make calls to our `TokenInterface` we need to generate the payload `TokenEndpoint::dispatch()` expects. So `pwasm_abi_derive::eth_abi` can generate an implementation of `TokenInterface` which will prepare payload for each method.
 
 ```rust
 #[eth_abi(TokenEndpoint, TokenClient)]
-pub trait TokenContract {
+pub trait TokenInterface {
     /// The constructor
     fn constructor(&mut self, _total_supply: U256);
     /// Total amount of tokens
@@ -188,7 +188,7 @@ pub trait TokenContract {
 }
 ```
 
-We've added a second argument `TokenClient` to the `eth_abi` macro, so this way we ask to generate a client implementation for `TokenContract` trait and name it as `TokenClient`. Let's suppose we've deployed a token contract on `0x7BA4324585CB5597adC283024819254345CD7C62` address. That's how we can make calls to it.
+We've added a second argument `TokenClient` to the `eth_abi` macro, so this way we ask to generate a client implementation for `TokenInterface` trait and name it as `TokenClient`. Let's suppose we've deployed a token contract on `0x7BA4324585CB5597adC283024819254345CD7C62` address. That's how we can make calls to it.
 
 ```rust
 extern pwasm_ethereum;
@@ -210,7 +210,7 @@ let token = TokenClient::new(Address::from("0x7BA4324585CB5597adC283024819254345
 let tokenSupply = token.totalSupply();
 ```
 
-If you move to `step-3` directory and run `cargo build --release --target wasm32-unknown-unknown` you will find a `TokenContract.json` in the `target/json` generated from `TokenContract` trait with the following content:
+If you move to `step-3` directory and run `cargo build --release --target wasm32-unknown-unknown` you will find a `TokenInterface.json` in the `target/json` generated from `TokenInterface` trait with the following content:
 
 ```json
 [
@@ -244,7 +244,7 @@ JSON above is an ABI definition which can be used along with Web.js to run trans
 var Web3 = require("web3");
 var fs = require("fs");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
+var abi = JSON.parse(fs.readFileSync("./target/TokenInterface.json"));
 var TokenContract = new web3.eth.Contract(abi, "0x7BA4324585CB5597adC283024819254345CD7C62", { from: web3.eth.defaultAccount });
 var totalSupply = TokenContract.methods.totalSupply().call().then(console.log);
 ```
@@ -260,7 +260,7 @@ Let's implement the `transfer` method for our ERC-20 contract. `step-4` director
 pub mod token {
 
     #[eth_abi(TokenEndpoint, TokenClient)]
-    pub trait TokenContract {
+    pub trait TokenInterface {
         /// The constructor
         fn constructor(&mut self, _total_supply: U256);
         /// Total amount of tokens
@@ -276,9 +276,9 @@ pub mod token {
         fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
     }
 
-    pub struct TokenContractInstance;
+    pub struct TokenContract;
 
-    impl TokenContract for TokenContractInstance {
+    impl TokenInterface for TokenContract {
         fn constructor(&mut self, total_supply: U256) {
             // ...
         }
@@ -327,7 +327,7 @@ Events are declared as part of a contract trait definition. Arguments which star
 
 ```rust
 #[eth_abi(TokenEndpoint, TokenClient)]
-pub trait TokenContract {
+pub trait TokenInterface {
     fn transfer(&mut self, _to: Address, _amount: U256) -> bool;
     #[event]
     fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
@@ -354,7 +354,7 @@ Topics are useful to filter events produced by contract. In following example we
 ```javascript
 var Web3 = require("web3");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-var abi = JSON.parse(fs.readFileSync("./target/TokenContract.json"));
+var abi = JSON.parse(fs.readFileSync("./target/TokenInterface.json"));
 var TokenContract = new web3.eth.Contract(abi, "0x7BA4324585CB5597adC283024819254345CD7C62", { from: web3.eth.defaultAccount });
 
 // Subscribe to the Transfer event
@@ -387,8 +387,8 @@ Now cd to `step-4` and build the contract:
 ./build.sh
 ```
 It should produce 2 files we need:
-- a compiled Wasm binary `./target/pwasm_tutorial_contract.wasm`
-- an ABI file: `./target/json/TokenContract.json`
+- a compiled Wasm binary `./target/wasm32-unknown-unknown/release/pwasm_tutorial_contract.wasm`
+- an ABI file: `./target/json/TokenInterface.json`
 
 At this point we can use Web.js to connect to the Parity node and deploy Wasm `pwasm_tutorial_contract.wasm`. Run the following code in `node` console:
 
@@ -400,9 +400,9 @@ var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 // NOTE: if you run Kovan node there should be an address you've got in the "Option 2: Run Kovan node" step
 web3.eth.defaultAccount = "0x004ec07d2329997267ec62b4166639513386f32e";
 // read JSON ABI
-var abi = JSON.parse(fs.readFileSync("./target/json/TokenContract.json"));
+var abi = JSON.parse(fs.readFileSync("./target/json/TokenInterface.json"));
 // convert Wasm binary to hex format
-var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").toString('hex');
+var codeHex = '0x' + fs.readFileSync("./target/wasm32-unknown-unknown/release/pwasm_tutorial_contract.wasm").toString('hex');
 
 var TokenContract = new web3.eth.Contract(abi, { data: codeHex, from: web3.eth.defaultAccount });
 
@@ -447,11 +447,11 @@ mod tests {
     use super::*;
     use self::pwasm_test::{ext_reset, ext_get};
     use parity_hash::Address;
-    use token::TokenContract;
+    use token::TokenInterface;
 
     #[test]
     fn should_succeed_transfering_1000_from_owner_to_another_address() {
-        let mut contract = token::TokenContractInstance{};
+        let mut contract = token::TokenContract{};
         let owner_address = Address::from("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
         let sam_address = Address::from("0xdb6fd484cfa46eeeb73c71edee823e4812f9e2e1");
         // Here we're creating an External context using ExternalBuilder and set the `sender` to the `owner_address`
