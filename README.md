@@ -193,7 +193,9 @@ pub trait TokenInterface {
 }
 ```
 
-We've added a second argument `TokenClient` to the `eth_abi` macro, so this way we ask to generate a client implementation for `TokenInterface` trait and name it as `TokenClient`. Let's suppose we've deployed a token contract on `0x7BA4324585CB5597adC283024819254345CD7C62` address. That's how we can make calls to it.
+We've added a second argument `TokenClient` to the `eth_abi` macro as a second argument (it is optional) -- this way we ask to generate a _client_ implementation for `TokenInterface` trait and name it as `TokenClient`. Unlike Endpoint (which is used internally in the contract to abstract away dispatching of the interface methods, turning RLP-encoded payloads into calls to the corresponding `TokenContract` methods with deserialized params), Client is doing the opposite, providing a Rust abstraction for RLP-serialized calls to any interface-compatible contract on chain.
+
+Let's suppose we've deployed a token contract on `0x7BA4324585CB5597adC283024819254345CD7C62` address. That's how we can make calls to it.
 
 ```rust
 extern pwasm_ethereum;
