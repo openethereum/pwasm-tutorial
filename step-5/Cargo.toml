@@ -23,7 +23,6 @@ default-features = false
 
 [lib]
 crate-type = ["cdylib"]
-path = "src/sample.rs"
 
 [features]
 std = ["pwasm-std/std", "pwasm-ethereum/std", "pwasm-test/std"]

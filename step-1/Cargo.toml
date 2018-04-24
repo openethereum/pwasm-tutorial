@@ -13,7 +13,6 @@ default-features = false
 
 [lib]
 crate-type = ["cdylib"]
-path = "src/sample.rs"
 
 [profile.release]
 panic = "abort"

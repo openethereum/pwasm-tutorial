@@ -7,7 +7,7 @@ web3.eth.defaultAccount = "0x004ec07d2329997267ec62b4166639513386f32e";
 // Unlock account
 web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user");
 // read JSON ABI
-var abi = JSON.parse(fs.readFileSync("./target/json/TokenContract.json"));
+var abi = JSON.parse(fs.readFileSync("./target/json/TokenInterface.json"));
 // convert Wasm binary to hex format
 var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").toString('hex');
 

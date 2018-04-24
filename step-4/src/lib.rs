@@ -22,10 +22,9 @@ pub mod token {
     use alloc::Vec;
 
     static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-    static OWNER_KEY: H256 = H256([3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 
     #[eth_abi(TokenEndpoint, TokenClient)]
-    pub trait TokenContract {
+    pub trait TokenInterface {
         /// The constructor
         fn constructor(&mut self, _total_supply: U256);
         /// Total amount of tokens
@@ -41,17 +40,12 @@ pub mod token {
         fn Transfer(&mut self, indexed_from: Address, indexed_to: Address, _value: U256);
     }
 
-    pub struct TokenContractInstance;
+    pub struct TokenContract;
 
-    impl TokenContract for TokenContractInstance {
+    impl TokenInterface for TokenContract {
         fn constructor(&mut self, total_supply: U256) {
-            let sender = pwasm_ethereum::sender();
             // Set up the total supply for the token
             pwasm_ethereum::write(&TOTAL_SUPPLY_KEY, &total_supply.into());
-            // Give all tokens to the contract owner
-            pwasm_ethereum::write(&balance_key(&sender), &total_supply.into());
-            // Set the contract owner
-            pwasm_ethereum::write(&OWNER_KEY, &H256::from(sender).into());
         }
 
         fn totalSupply(&mut self) -> U256 {
@@ -97,42 +91,13 @@ use pwasm_abi::eth::EndpointInterface;
 
 #[no_mangle]
 pub fn call() {
-    let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
+    let mut endpoint = token::TokenEndpoint::new(token::TokenContract{});
     // Read http://solidity.readthedocs.io/en/develop/abi-spec.html#formal-specification-of-the-encoding for details
     pwasm_ethereum::ret(&endpoint.dispatch(&pwasm_ethereum::input()));
 }
 
 #[no_mangle]
 pub fn deploy() {
-    let mut endpoint = token::TokenEndpoint::new(token::TokenContractInstance{});
+    let mut endpoint = token::TokenEndpoint::new(token::TokenContract{});
     endpoint.dispatch_ctor(&pwasm_ethereum::input());
-}
-
-#[cfg(test)]
-#[allow(non_snake_case)]
-mod tests {
-    extern crate pwasm_test;
-    extern crate std;
-    use super::*;
-    use self::pwasm_test::{ext_reset, ext_get};
-    use parity_hash::Address;
-    use token::TokenContract;
-
-    #[test]
-    fn should_succeed_transfering_1000_from_owner_to_another_address() {
-        let mut contract = token::TokenContractInstance{};
-        let owner_address = Address::from("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
-        let sam_address = Address::from("0xdb6fd484cfa46eeeb73c71edee823e4812f9e2e1");
-        // Here we're creating an External context using ExternalBuilder and set the `sender` to the `owner_address`
-        // so `pwasm_ethereum::sender()` in TokenContract::constructor() will return that `owner_address`
-        ext_reset(|e| e.sender(owner_address.clone()));
-        let total_supply = 10000.into();
-        contract.constructor(total_supply);
-        assert_eq!(contract.balanceOf(owner_address), total_supply);
-        assert_eq!(contract.transfer(sam_address, 1000.into()), true);
-        assert_eq!(contract.balanceOf(owner_address), 9000.into());
-        assert_eq!(contract.balanceOf(sam_address), 1000.into());
-        // 1 log entry should be created
-        assert_eq!(ext_get().logs().len(), 1);
-    }
 }
