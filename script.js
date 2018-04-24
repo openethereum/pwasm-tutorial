@@ -9,7 +9,7 @@ web3.eth.personal.unlockAccount(web3.eth.defaultAccount, "user");
 // read JSON ABI
 var abi = JSON.parse(fs.readFileSync("./target/json/TokenInterface.json"));
 // convert Wasm binary to hex format
-var codeHex = '0x' + fs.readFileSync("./target/wasm32-unknown-unknown/release/pwasm_tutorial_contract.wasm").toString('hex');
+var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").toString('hex');
 
 var TokenContract = new web3.eth.Contract(abi, { data: codeHex, from: web3.eth.defaultAccount });
 // Will create TokenContract with `totalSupply` = 10000000 and print a result

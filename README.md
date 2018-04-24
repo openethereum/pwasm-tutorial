@@ -19,6 +19,11 @@ rustup target add wasm32-unknown-unknown
 cargo install pwasm-utils
 ```
 
+One should then run `wasm-build` agains plain Cargo-generated `.wasm` artifact (`target/wasm32-unknown-unknown/release/pwasm_tutorial_contract.wasm`) to trim and optimise it for blockchain usage.
+That is done with a single command `wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract` (it assumes the proper subfolder structure of Cargo's `target` folder automatically); that invocation results in a `target/pwasm_tutorial_contract.wasm` blockchain-ready bytecode being produced.
+
+For your convenience, every step in our tutorial features a `build.sh` shell script, which incorporates the proper `wasm-build` call (unfortunately, cargo's build pipeline is not yet extensible enough to feature such steps automatically). Alternatively, one can trivially call the same wasm packing manually after every build.
+
 ### Parity
 Follow this guide https://github.com/paritytech/parity/wiki/Setup. You'll need Parity version **1.9.5** or later.
 
@@ -387,7 +392,7 @@ Now cd to `step-4` and build the contract:
 ./build.sh
 ```
 It should produce 2 files we need:
-- a compiled Wasm binary `./target/wasm32-unknown-unknown/release/pwasm_tutorial_contract.wasm`
+- a compiled Wasm binary `./target/pwasm_tutorial_contract.wasm`
 - an ABI file: `./target/json/TokenInterface.json`
 
 At this point we can use Web.js to connect to the Parity node and deploy Wasm `pwasm_tutorial_contract.wasm`. Run the following code in `node` console:
@@ -402,7 +407,7 @@ web3.eth.defaultAccount = "0x004ec07d2329997267ec62b4166639513386f32e";
 // read JSON ABI
 var abi = JSON.parse(fs.readFileSync("./target/json/TokenInterface.json"));
 // convert Wasm binary to hex format
-var codeHex = '0x' + fs.readFileSync("./target/wasm32-unknown-unknown/release/pwasm_tutorial_contract.wasm").toString('hex');
+var codeHex = '0x' + fs.readFileSync("./target/pwasm_tutorial_contract.wasm").toString('hex');
 
 var TokenContract = new web3.eth.Contract(abi, { data: codeHex, from: web3.eth.defaultAccount });
 
