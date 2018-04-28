@@ -19,7 +19,7 @@ rustup target add wasm32-unknown-unknown
 cargo install pwasm-utils
 ```
 
-One should then run `wasm-build` agains plain Cargo-generated `.wasm` artifact (`target/wasm32-unknown-unknown/release/pwasm_tutorial_contract.wasm`) to trim and optimise it for blockchain usage.
+One should then run `wasm-build` against the plain Cargo-generated `.wasm` artifact (`target/wasm32-unknown-unknown/release/pwasm_tutorial_contract.wasm`) to trim and optimise it for blockchain usage.
 That is done with a single command `wasm-build --target=wasm32-unknown-unknown ./target pwasm_tutorial_contract` (it assumes the proper subfolder structure of Cargo's `target` folder automatically); that invocation results in a `target/pwasm_tutorial_contract.wasm` blockchain-ready bytecode being produced.
 
 For your convenience, every step in our tutorial features a `build.sh` shell script, which incorporates the proper `wasm-build` call (unfortunately, cargo's build pipeline is not yet extensible enough to feature such steps automatically). Alternatively, one can trivially call the same wasm packing manually after every build.
@@ -85,7 +85,7 @@ use parity_hash::H256;
 pub fn deploy() {
     // Lets set the sender address to the contract storage at address "0"
     pwasm_ethereum::write(&H256::zero().into(), &H256::from(pwasm_ethereum::sender()).into());
-    // Note we should't write any result into the call descriptor in deploy.
+    // Note we shouldn't write any result into the call descriptor in deploy.
 }
 
 // The following code will be stored on the blockchain.
@@ -157,7 +157,7 @@ pub fn deploy() {
 
 ```
 `token::TokenInterface` is an interface definition of the contract.
-`pwasm_abi_derive::eth_abi` is a [procedural macros](https://doc.rust-lang.org/book/first-edition/procedural-macros.html) uses a trait `token::TokenIntergace` to generate decoder (`TokenEndpoint`) for payload in Solidity ABI format. `TokenEndpoint` implements an `EndpointInterface` trait:
+`pwasm_abi_derive::eth_abi` is a [procedural macros](https://doc.rust-lang.org/book/first-edition/procedural-macros.html) uses a trait `token::TokenInterface` to generate decoder (`TokenEndpoint`) for payload in Solidity ABI format. `TokenEndpoint` implements an `EndpointInterface` trait:
 
 ```rust
 /// Endpoint interface for contracts
@@ -195,7 +195,7 @@ pub trait TokenInterface {
 
 We've added a second argument `TokenClient` to the `eth_abi` macro as a second argument (it is optional) -- this way we ask to generate a _client_ implementation for `TokenInterface` trait and name it as `TokenClient`.
 First one requests the name for the Endpoint implementation, which is used internally in the contract to hide away dispatching of the interface methods, turning Ethereum ABI-encoded payloads into calls to the corresponding `TokenContract` methods with deserialized params.
-Client, created via the second argeument, is doing the opposite, providing a Rust wrapper for Ethereum ABI-compatible calls to any interface-compatible contract on chain.
+Client, created via the second argument, is doing the opposite, providing a Rust wrapper for Ethereum ABI-compatible calls to any interface-compatible contract on chain.
 
 Let's suppose we've deployed a token contract on `0x7BA4324585CB5597adC283024819254345CD7C62` address. That's how we can make calls to it.
 
@@ -326,7 +326,7 @@ pub mod token {
     // Used to map balances with their owners.
     fn balance_key(address: &Address) -> H256 {
         let mut key = H256::from(address);
-        key[0] = 1; // just a naiive "namespace";
+        key[0] = 1; // just a naive "namespace";
         key
     }
 }
@@ -437,7 +437,7 @@ TokenContract.methods.balanceOf(web3.eth.defaultAccount).call().then(console.log
 ## Testing
 [pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test a contract's logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
 
-By default our contracts built with `#![no_std]`, but `rust test` need the Rust stdlib for treading and i/o. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/paritytech/pwasm-tutorial/tree/master/step-5):
+By default our contracts built with `#![no_std]`, but `rust test` need the Rust stdlib for threading and I/O. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/paritytech/pwasm-tutorial/tree/master/step-5):
 
 ```
 [features]
