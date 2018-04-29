@@ -175,7 +175,7 @@ The `dispatch` expects `payload` and returns a result in the format defined in [
 A complete implementation of ERC20 can be found here https://github.com/paritytech/pwasm-token-example.
 
 ### pwasm-std
-[pwasm-std](https://paritytech.github.io/pwasm-std/pwasm_std/) is the lightweight standard library. It implements common data structures, conversion utils and provides bindings to the runtime.
+[pwasm-std](https://paritytech.github.io/pwasm-std/pwasm_std/) is a lightweight standard library. It implements common data structures, conversion utils and provides bindings to the runtime.
 
 ## Make calls to other contracts
 Source code: https://github.com/paritytech/pwasm-tutorial/tree/master/step-3
