@@ -59,7 +59,7 @@ pub fn call() {
 ## Building
 To make sure that everything is set up go to the `step-0` directory and run `./build.sh`
 
-As a result the `pwasm_tutorial_contract.wasm` should be created under the `step-0/target/wasm32-unknown-unknown/release/` directory.
+As a result the `pwasm_tutorial_contract.wasm` should be created in the `target` directory.
 
 Take a look on the contents of the `./build.sh` executable:
 
