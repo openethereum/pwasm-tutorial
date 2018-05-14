@@ -140,6 +140,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "pwasm-alloc"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "wee_alloc 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "pwasm-ethereum"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -148,6 +156,17 @@ dependencies = [
  "byteorder 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "parity-hash 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pwasm-std 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "pwasm-ethereum"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "bigint 4.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "byteorder 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "parity-hash 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-std 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -173,6 +192,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "pwasm-std"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "byteorder 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cfg-if 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "parity-hash 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-alloc 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-libc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tiny-keccak 1.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "pwasm-test"
 version = "0.1.0"
 source = "git+https://github.com/paritytech/pwasm-test#2469bdfd695c70ab0b45b0c1853b50659ce520ff"
@@ -191,8 +223,8 @@ dependencies = [
  "parity-hash 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pwasm-abi 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pwasm-abi-derive 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pwasm-ethereum 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pwasm-std 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-ethereum 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-std 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pwasm-test 0.1.0 (git+https://github.com/paritytech/pwasm-test)",
 ]
 
@@ -334,6 +366,19 @@ version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "unreachable"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "void 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "void"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "wee_alloc"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -341,6 +386,18 @@ dependencies = [
  "libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)",
  "memory_units 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "mmap-alloc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "winapi 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "wee_alloc"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "cfg-if 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)",
+ "memory_units 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "unreachable 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -392,9 +449,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum pwasm-abi 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "6a3c97b4029f99d474f9bbcd2cebea2148fb4e5bdc2bfcef0d0ed69f3bbe9636"
 "checksum pwasm-abi-derive 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "12b933f76b824afaea9cf9f741d5bab07e8ac0e2cd2324d622f9a5edfada1ca6"
 "checksum pwasm-alloc 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d44aa2da6578f5ef12ecba787d551603a16048ad2864ef2e6c20f20d3aff9223"
+"checksum pwasm-alloc 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "bf268e76f224753679a7cb6e0261c9226676c83cd4d2b6ead2095524f00c854f"
 "checksum pwasm-ethereum 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c81df3151417b980be2bd875e3c80a004cf391b2cf9f2390a49456457686eaab"
+"checksum pwasm-ethereum 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "0a19d8d4e6dffd6f5282794eff3d3db5b877634d6c8b74d2ef038235e26c54d3"
 "checksum pwasm-libc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "027307d6d2086ffb7f399227d42593c5341e8869a55ac8dd7c79d7ca04ec00e2"
 "checksum pwasm-std 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c6dc25e45336519f090ac3a256194ecc0647cc1cf812cb23223b1013d6c5c20d"
+"checksum pwasm-std 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "f45b27c562e1597ef668875f62d36d181077db4dd13ee6faff2dfb3c8cf985fa"
 "checksum pwasm-test 0.1.0 (git+https://github.com/paritytech/pwasm-test)" = "<none>"
 "checksum quote 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)" = "7a6e920b65c65f10b2ae65c831a81a073a89edd28c7cce89475bff467ab4167a"
 "checksum quote 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)" = "1eca14c727ad12702eb4b6bfb5a232287dcf8385cb8ca83a3eeaf6519c44c408"
@@ -414,7 +474,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum tiny-keccak 1.4.1 (registry+https://github.com/rust-lang/crates.io-index)" = "58911ed5eb275a8fd2f1f0418ed360a42f59329864b64e1e95377a9024498c01"
 "checksum unicode-xid 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)" = "8c1f860d7d29cf02cb2f3f359fd35991af3d30bac52c57d265a3c461074cb4dc"
 "checksum unicode-xid 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "fc72304796d0818e357ead4e000d19c9c174ab23dc11093ac919054d20a6a7fc"
+"checksum unreachable 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "382810877fe448991dfc7f0dd6e3ae5d58088fd0ea5e35189655f84e6814fa56"
+"checksum void 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
 "checksum wee_alloc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ad1b03adad488bc6595d4fc01a51954976751cc30c48dd4595c3176fe2721213"
+"checksum wee_alloc 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "dbcd062fbcffa61a4ff80da1acc790e45450f73636e31db6c5f133df34ef218b"
 "checksum winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)" = "167dc9d6949a9b857f3451275e911c3f44255842c1f7a76f33c55103a909087a"
 "checksum winapi 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)" = "04e3bd221fcbe8a271359c04f21a76db7d0c6028862d1bb5512d85e1e2eb5bb3"
 "checksum winapi-build 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "2d315eee3b34aca4797b2da6b13ed88266e6d612562a0c46390af8299fc699bc"
