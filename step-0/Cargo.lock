@@ -80,7 +80,7 @@ dependencies = [
  "parity-hash 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pwasm-alloc 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pwasm-libc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "tiny-keccak 1.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tiny-keccak 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -124,7 +124,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "tiny-keccak"
-version = "1.4.1"
+version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "crunchy 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -191,7 +191,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum rustc_version 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "a54aa04a10c68c1c4eacb4337fd883b435997ede17a9385784b990777686b09a"
 "checksum semver 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "1d7eb9ef2c18661902cc47e535f9bc51b78acd254da71d375c2f6720d9a40403"
 "checksum semver-parser 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"
-"checksum tiny-keccak 1.4.1 (registry+https://github.com/rust-lang/crates.io-index)" = "58911ed5eb275a8fd2f1f0418ed360a42f59329864b64e1e95377a9024498c01"
+"checksum tiny-keccak 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "3e9241752647ca572f12c9b520a5d360d9099360c527770647e694001646a1d0"
 "checksum unreachable 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "382810877fe448991dfc7f0dd6e3ae5d58088fd0ea5e35189655f84e6814fa56"
 "checksum void 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
 "checksum wee_alloc 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "dbcd062fbcffa61a4ff80da1acc790e45450f73636e31db6c5f133df34ef218b"
