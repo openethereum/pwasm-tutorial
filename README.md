@@ -447,7 +447,7 @@ TokenContract.methods.balanceOf(web3.eth.defaultAccount).call().then(console.log
 ## Testing
 [pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test a contract's logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
 
-By default our contracts built with `#![no_std]`, but `rust test` need the Rust stdlib for threading and I/O. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/paritytech/pwasm-tutorial/tree/master/step-5):
+By default our contracts built with `#![no_std]`, but `rust test` needs the Rust stdlib for threading and I/O. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/paritytech/pwasm-tutorial/tree/master/step-5):
 
 ```
 [features]
