@@ -8,7 +8,7 @@ There is a list of all tools and dependencies required for this tutorial.
 rustup install nightly
 ```
 
-Also, we need to install `wasm32-unknown-unknown` to compile contract to Wasm:
+Also, we need to install `wasm32-unknown-unknown` to compile contracts to Wasm:
 ```bash
 rustup target add wasm32-unknown-unknown
 ```
@@ -16,11 +16,11 @@ rustup target add wasm32-unknown-unknown
 ### Parity wasm-build
 [wasm-build](https://github.com/paritytech/wasm-utils#build-tools-for-cargo) takes the raw `.wasm` file produced by Rust compiler and packs it to the form of valid contract.
 ```
-cargo install pwasm-utils
+cargo install pwasm-utils-cli --bin wasm-build
 ```
 
 ### Parity
-Follow this guide https://github.com/paritytech/parity/wiki/Setup. You'll need Parity version **1.9.5** or later.
+Follow the [parity setup guide](https://wiki.parity.io/Setup). You'll need Parity version **1.9.5** or later.
 
 ### Web3.js
 We'll be using `Web3.js` to connect to the Parity node. Change dir to the root `pwasm-tutorial` and run [npm](https://nodejs.org/en/) to install `Web3.js`:
@@ -202,8 +202,10 @@ pub trait TokenInterface {
 ```
 
 We've added a second argument `TokenClient` to the `eth_abi` macro as a second argument (it is optional) -- this way we ask to generate a _client_ implementation for `TokenInterface` trait and name it as `TokenClient`.
-First one requests the name for the Endpoint implementation, which is used internally in the contract to hide away dispatching of the interface methods, turning Ethereum ABI-encoded payloads into calls to the corresponding `TokenContract` methods with deserialized params.
-Client, created via the second argument, is doing the opposite, providing a Rust wrapper for Ethereum ABI-compatible calls to any interface-compatible contract on chain.
+
+As mentioned [above](https://github.com/paritytech/pwasm-tutorial/blob/master/README.md#contract-abi-declaration), a first argument to the `eth_abi` macro requests the name for to be generated Endpoint implementation, which turns Ethereum ABI-encoded payloads into calls to the corresponding `TokenContract` methods with deserialized params.
+
+*Client* (`TokenClient`), created via the second argument, is doing the opposite to *endpoint*, providing an implementation which generates Ethereum ABI-compatible calls (consumable by `TokenEndpoint`) for every `TokenInterface` call.
 
 Let's suppose we've deployed a token contract on `0x7BA4324585CB5597adC283024819254345CD7C62` address. That's how we can make calls to it.
 
@@ -383,7 +385,7 @@ TokenContract.events.Transfer({
 ```
 
 ## Run node and deploy contract
-Now it's time to deploy our Wasm contract on the blockchain. We can ether test in own local development chain or publish it on the public Kovan network.
+Now it's time to deploy our Wasm contract on the blockchain. We can either test in own local development chain or publish it on the public Kovan network.
 
 ### Option 1: Setup and run development node
 Parity **1.9.5** includes support for running Wasm contracts.
@@ -445,7 +447,7 @@ TokenContract.methods.balanceOf(web3.eth.defaultAccount).call().then(console.log
 ## Testing
 [pwasm-test](https://github.com/paritytech/pwasm-test) makes it easy to test a contract's logic. It allows to emulate the blockchain state and mock any [pwasm-ethereum](#pwasm-ethereum) call.
 
-By default our contracts built with `#![no_std]`, but `rust test` need the Rust stdlib for threading and I/O. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/paritytech/pwasm-tutorial/tree/master/step-5):
+By default our contracts built with `#![no_std]`, but `rust test` needs the Rust stdlib for threading and I/O. Thus, in order to run tests we've added a following feature gate in [Cargo.toml](https://github.com/paritytech/pwasm-tutorial/tree/master/step-5):
 
 ```
 [features]
