@@ -24,25 +24,6 @@ version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "errno"
-version = "0.2.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)",
- "winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "kernel32-sys"
-version = "0.2.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
- "winapi-build 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "libc"
 version = "0.2.39"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -50,24 +31,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "memory_units"
 version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "mmap-alloc"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "errno 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)",
- "object-alloc 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "sysconf 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "object-alloc"
-version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -81,21 +44,21 @@ dependencies = [
 
 [[package]]
 name = "pwasm-alloc"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "wee_alloc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "wee_alloc 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "pwasm-ethereum"
-version = "0.3.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "bigint 4.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "byteorder 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "parity-hash 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pwasm-std 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-std 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -109,13 +72,13 @@ dependencies = [
 
 [[package]]
 name = "pwasm-std"
-version = "0.6.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "byteorder 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "cfg-if 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "parity-hash 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pwasm-alloc 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-alloc 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pwasm-libc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tiny-keccak 1.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -124,8 +87,8 @@ dependencies = [
 name = "pwasm-tutorial-contract"
 version = "0.1.0"
 dependencies = [
- "pwasm-ethereum 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pwasm-std 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-ethereum 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-std 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -160,17 +123,6 @@ version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "sysconf"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "errno 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)",
- "winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "tiny-keccak"
 version = "1.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -179,20 +131,29 @@ dependencies = [
 ]
 
 [[package]]
-name = "wee_alloc"
-version = "0.2.0"
+name = "unreachable"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)",
- "memory_units 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "mmap-alloc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "winapi 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "void 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
-name = "winapi"
-version = "0.2.8"
+name = "void"
+version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "wee_alloc"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "cfg-if 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)",
+ "memory_units 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "unreachable 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "winapi 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "winapi"
@@ -202,11 +163,6 @@ dependencies = [
  "winapi-i686-pc-windows-gnu 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi-x86_64-pc-windows-gnu 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
-
-[[package]]
-name = "winapi-build"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "winapi-i686-pc-windows-gnu"
@@ -223,27 +179,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum byteorder 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "652805b7e73fada9d85e9a6682a4abd490cb52d96aeecc12e33a0de34dfd0d23"
 "checksum cfg-if 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "d4c819a1287eb618df47cc647173c5c4c66ba19d888a6e50d605672aed3140de"
 "checksum crunchy 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)" = "a2f4a431c5c9f662e1200b7c7f02c34e91361150e382089a8f2dec3ba680cbda"
-"checksum errno 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)" = "b2c858c42ac0b88532f48fca88b0ed947cad4f1f64d904bcd6c9f138f7b95d70"
-"checksum kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "7507624b29483431c0ba2d82aece8ca6cdba9382bff4ddd0f7490560c056098d"
 "checksum libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)" = "f54263ad99207254cf58b5f701ecb432c717445ea2ee8af387334bdd1a03fdff"
 "checksum memory_units 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8452105ba047068f40ff7093dd1d9da90898e63dd61736462e9cdda6a90ad3c3"
-"checksum mmap-alloc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "a71c1f979166d8fc589a2ff5a12632b7daa4ac387762c2cdbb860f89dd0adfc7"
-"checksum object-alloc 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "a2782bfccc81e24c1d6d1a0ecf7eecbccbb635ac72fc733f35f0be0d0b4b0575"
 "checksum parity-hash 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "fdd741c00934b85b6fe9d7520274962f2a73a12351c96b2ac938f68afad6b213"
-"checksum pwasm-alloc 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d44aa2da6578f5ef12ecba787d551603a16048ad2864ef2e6c20f20d3aff9223"
-"checksum pwasm-ethereum 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c81df3151417b980be2bd875e3c80a004cf391b2cf9f2390a49456457686eaab"
+"checksum pwasm-alloc 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "bf268e76f224753679a7cb6e0261c9226676c83cd4d2b6ead2095524f00c854f"
+"checksum pwasm-ethereum 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "8af7c64e85aa75523bb343fcbd45ee8654f5b0c7a7efad8eb2a689b5252d73bc"
 "checksum pwasm-libc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "027307d6d2086ffb7f399227d42593c5341e8869a55ac8dd7c79d7ca04ec00e2"
-"checksum pwasm-std 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c6dc25e45336519f090ac3a256194ecc0647cc1cf812cb23223b1013d6c5c20d"
+"checksum pwasm-std 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "7eb93895d4a92c3452966a59f2567a96c1355ad66f3f6c3535e863085116ac84"
 "checksum rlibc 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "fc874b127765f014d792f16763a81245ab80500e2ad921ed4ee9e82481ee08fe"
 "checksum rustc-hex 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "0ceb8ce7a5e520de349e1fa172baeba4a9e8d5ef06c47471863530bc4972ee1e"
 "checksum rustc_version 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "a54aa04a10c68c1c4eacb4337fd883b435997ede17a9385784b990777686b09a"
 "checksum semver 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "1d7eb9ef2c18661902cc47e535f9bc51b78acd254da71d375c2f6720d9a40403"
 "checksum semver-parser 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"
-"checksum sysconf 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "f3979ffee2226ba9f55787caba85cad91be3ea247c94408e74704856edaf0f93"
 "checksum tiny-keccak 1.4.1 (registry+https://github.com/rust-lang/crates.io-index)" = "58911ed5eb275a8fd2f1f0418ed360a42f59329864b64e1e95377a9024498c01"
-"checksum wee_alloc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ad1b03adad488bc6595d4fc01a51954976751cc30c48dd4595c3176fe2721213"
-"checksum winapi 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)" = "167dc9d6949a9b857f3451275e911c3f44255842c1f7a76f33c55103a909087a"
+"checksum unreachable 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "382810877fe448991dfc7f0dd6e3ae5d58088fd0ea5e35189655f84e6814fa56"
+"checksum void 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
+"checksum wee_alloc 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)" = "02cc69499a296c5b6cf09e345b6046b01d364c15187f2d0b689dd00312d6112a"
 "checksum winapi 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)" = "04e3bd221fcbe8a271359c04f21a76db7d0c6028862d1bb5512d85e1e2eb5bb3"
-"checksum winapi-build 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "2d315eee3b34aca4797b2da6b13ed88266e6d612562a0c46390af8299fc699bc"
 "checksum winapi-i686-pc-windows-gnu 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
 "checksum winapi-x86_64-pc-windows-gnu 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
