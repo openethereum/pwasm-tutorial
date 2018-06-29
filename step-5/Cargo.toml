@@ -4,17 +4,17 @@ version = "0.1.0"
 authors = ["Alexey Frolov <alexey@parity.io>"]
 
 [dependencies]
-pwasm-std = "0.9.0"
-pwasm-ethereum = "0.5.1"
-pwasm-abi = "0.1.2"
-pwasm-abi-derive = "0.1.2"
+pwasm-std = "0.9"
+pwasm-ethereum = "0.5"
+pwasm-abi = "0.1"
+pwasm-abi-derive = "0.1"
 
 [dependencies.bigint]
-version = "4.4.0"
+version = "4.4"
 default-features = false
 
 [dependencies.parity-hash]
-version = "1.2.0"
+version = "1.2"
 default-features = false
 
 [dev-dependencies.pwasm-test]
