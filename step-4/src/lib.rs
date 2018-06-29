@@ -2,6 +2,7 @@
 #![allow(non_snake_case)]
 #![feature(alloc)]
 #![feature(proc_macro)]
+#![feature(proc_macro_gen)]
 
 extern crate parity_hash;
 extern crate pwasm_std;

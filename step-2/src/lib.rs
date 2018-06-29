@@ -2,6 +2,7 @@
 #![allow(non_snake_case)]
 #![feature(alloc)]
 #![feature(proc_macro)]
+#![feature(proc_macro_gen)]
 
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
@@ -10,6 +11,7 @@ extern crate pwasm_abi;
 extern crate pwasm_abi_derive;
 /// Bigint used for 256-bit arithmetic
 extern crate bigint;
+extern crate parity_hash;
 
 pub mod token {
     use pwasm_ethereum;
