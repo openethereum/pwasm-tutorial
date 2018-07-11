@@ -67,7 +67,7 @@ pub mod token {
             let sender = pwasm_ethereum::sender();
             let senderBalance = read_balance_of(&sender);
             let recipientBalance = read_balance_of(&to);
-            if amount == 0.into() || senderBalance < amount {
+            if amount == 0.into() || senderBalance < amount || to == sender {
                 false
             } else {
                 let new_sender_balance = senderBalance - amount;
@@ -136,4 +136,18 @@ mod tests {
         // 1 log entry should be created
         assert_eq!(ext_get().logs().len(), 1);
     }
+
+    #[test]
+    fn should_not_transfer_to_self() {
+        let mut contract = token::TokenContract{};
+        let owner_address = Address::from("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
+        ext_reset(|e| e.sender(owner_address.clone()));
+        let total_supply = 10000.into();
+        contract.constructor(total_supply);
+        assert_eq!(contract.balanceOf(owner_address), total_supply);
+        assert_eq!(contract.transfer(owner_address, 1000.into()), false);
+        assert_eq!(contract.balanceOf(owner_address), 10000.into());
+        assert_eq!(ext_get().logs().len(), 0);
+    }
+ 
 }
