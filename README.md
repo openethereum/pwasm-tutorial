@@ -314,7 +314,7 @@ pub mod token {
             let sender = pwasm_ethereum::sender();
             let senderBalance = read_balance_of(&sender);
             let recipientBalance = read_balance_of(&to);
-            if amount == 0.into() || senderBalance < amount {
+            if amount == 0.into() || senderBalance < amount || to == sender {
                 false
             } else {
                 let new_sender_balance = senderBalance - amount;
@@ -356,7 +356,7 @@ fn transfer(&mut self, to: Address, amount: U256) -> bool {
     let sender = pwasm_ethereum::sender();
     let senderBalance = read_balance_of(&sender);
     let recipientBalance = read_balance_of(&to);
-    if amount == 0.into() || senderBalance < amount {
+    if amount == 0.into() || senderBalance < amount || to == sender {
         false
     } else {
         let new_sender_balance = senderBalance - amount;
