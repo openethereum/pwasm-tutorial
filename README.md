@@ -401,7 +401,7 @@ When it syncs up follow https://github.com/kovan-testnet/faucet to set up an acc
 ### Deploy
 Let Parity run in a separate terminal window.
 
-Now cd to `step-4` and build the contract:
+Now cd to `step-5` and build the contract:
 ```bash
 ./build.sh
 ```
