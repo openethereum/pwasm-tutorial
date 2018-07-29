@@ -1,26 +1,19 @@
 #![no_std]
 #![allow(non_snake_case)]
-#![feature(alloc)]
-#![feature(proc_macro)]
+#![feature(use_extern_macros)]
 #![feature(proc_macro_gen)]
 
-extern crate parity_hash;
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
-extern crate alloc;
 extern crate pwasm_abi;
 extern crate pwasm_abi_derive;
-/// Bigint used for 256-bit arithmetic
-extern crate bigint;
 
 pub mod token {
-    use parity_hash::{H256, Address};
     use pwasm_ethereum;
-    use bigint::U256;
+    use pwasm_abi::types::*;
 
     // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
-    use alloc::Vec;
 
     static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     static OWNER_KEY: H256 = H256([3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
@@ -115,8 +108,8 @@ mod tests {
     extern crate pwasm_test;
     extern crate std;
     use super::*;
+    use pwasm_abi::types::*;
     use self::pwasm_test::{ext_reset, ext_get};
-    use parity_hash::Address;
     use token::TokenInterface;
 
     #[test]
@@ -149,5 +142,5 @@ mod tests {
         assert_eq!(contract.balanceOf(owner_address), 10000.into());
         assert_eq!(ext_get().logs().len(), 0);
     }
- 
+
 }

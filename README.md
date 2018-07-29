@@ -5,7 +5,7 @@ There is a list of all tools and dependencies required for this tutorial.
 [rustup](https://github.com/rust-lang-nursery/rustup.rs#installation) is the easiest way to install Rust toolchains. Rust nightly toolchain is required since our contracts require some unstable features:
 
 ```bash
-rustup install nightly-2018-06-28
+rustup install nightly-2018-07-24
 ```
 
 Also, we need to install `wasm32-unknown-unknown` to compile contracts to Wasm:
