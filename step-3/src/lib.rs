@@ -1,21 +1,16 @@
 #![no_std]
 #![allow(non_snake_case)]
-#![feature(proc_macro)]
+#![feature(use_extern_macros)]
 #![feature(proc_macro_gen)]
 
-extern crate parity_hash;
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
 extern crate pwasm_abi;
 extern crate pwasm_abi_derive;
-/// Bigint used for 256-bit arithmetic
-extern crate bigint;
 
 pub mod token {
-    use pwasm_std::Vec;
     use pwasm_ethereum;
-    use parity_hash::H256;
-    use bigint::U256;
+    use pwasm_abi::types::*;
 
     // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;

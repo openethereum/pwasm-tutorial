@@ -51,13 +51,13 @@ dependencies = [
 
 [[package]]
 name = "pwasm-ethereum"
-version = "0.5.1"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "bigint 4.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "byteorder 1.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "parity-hash 1.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pwasm-std 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-std 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -71,11 +71,10 @@ dependencies = [
 
 [[package]]
 name = "pwasm-std"
-version = "0.9.0"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "byteorder 1.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "cfg-if 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "parity-hash 1.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pwasm-alloc 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pwasm-libc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -86,8 +85,8 @@ dependencies = [
 name = "pwasm-tutorial-contract"
 version = "0.1.0"
 dependencies = [
- "pwasm-ethereum 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "pwasm-std 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-ethereum 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pwasm-std 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -161,9 +160,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum memory_units 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8452105ba047068f40ff7093dd1d9da90898e63dd61736462e9cdda6a90ad3c3"
 "checksum parity-hash 1.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ad090011741dd5c6b7aee2e08717b9eecb2f5ccf1e0345533015cef152c8b020"
 "checksum pwasm-alloc 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "bf268e76f224753679a7cb6e0261c9226676c83cd4d2b6ead2095524f00c854f"
-"checksum pwasm-ethereum 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "8af7c64e85aa75523bb343fcbd45ee8654f5b0c7a7efad8eb2a689b5252d73bc"
+"checksum pwasm-ethereum 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b482b4364edeb5249b5144f35b00a9eb065939d8dd5b6b370fa50223aff9b017"
 "checksum pwasm-libc 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "027307d6d2086ffb7f399227d42593c5341e8869a55ac8dd7c79d7ca04ec00e2"
-"checksum pwasm-std 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "7eb93895d4a92c3452966a59f2567a96c1355ad66f3f6c3535e863085116ac84"
+"checksum pwasm-std 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)" = "813c55a13acb1e369ca3f75817fdb913c1765e6219b4a4331e89765c01f41670"
 "checksum rlibc 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "fc874b127765f014d792f16763a81245ab80500e2ad921ed4ee9e82481ee08fe"
 "checksum rustc-hex 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "0ceb8ce7a5e520de349e1fa172baeba4a9e8d5ef06c47471863530bc4972ee1e"
 "checksum tiny-keccak 1.4.2 (registry+https://github.com/rust-lang/crates.io-index)" = "e9175261fbdb60781fcd388a4d6cc7e14764a2b629a7ad94abb439aed223a44f"
