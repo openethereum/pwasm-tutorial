@@ -23,9 +23,9 @@ cargo install pwasm-utils-cli --bin wasm-build
 Follow the [parity setup guide](https://wiki.parity.io/Setup). You'll need Parity version **1.9.5** or later.
 
 ### Web3.js
-We'll be using `Web3.js` to connect to the Parity node. Change dir to the root `pwasm-tutorial` and run [npm](https://nodejs.org/en/) to install `Web3.js`:
+We'll be using `Web3.js` to connect to the Parity node. Change dir to the root `pwasm-tutorial` and run [yarn](https://yarnpkg.com) or [npm](https://nodejs.org) to install `Web3.js`:
 ```
-npm install
+yarn install
 ```
 
 ### Tutorial source code

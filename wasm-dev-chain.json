@@ -11,7 +11,7 @@
         "minGasLimit": "0x1388",
         "networkID" : "0x11",
         "maxCodeSize": 1000000,
-		"maxCodeSizeTransition": 1
+        "maxCodeSizeTransition": 1
     },
     "genesis": {
         "seal": {
