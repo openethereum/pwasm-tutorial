@@ -43,7 +43,7 @@ pub mod token {
         }
 
         fn totalSupply(&mut self) -> U256 {
-            pwasm_ethereum::read(&TOTAL_SUPPLY_KEY).into()
+            U256::from_big_endian(&pwasm_ethereum::read(&TOTAL_SUPPLY_KEY))
         }
 
         fn balanceOf(&mut self, owner: Address) -> U256 {
@@ -69,7 +69,7 @@ pub mod token {
 
     // Reads balance by address
     fn read_balance_of(owner: &Address) -> U256 {
-        pwasm_ethereum::read(&balance_key(owner)).into()
+        U256::from_big_endian(&pwasm_ethereum::read(&balance_key(owner)))
     }
 
     // Generates a balance key for some address.

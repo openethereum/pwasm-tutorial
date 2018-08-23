@@ -36,7 +36,7 @@ pub mod token {
         }
 
         fn totalSupply(&mut self) -> U256 {
-            pwasm_ethereum::read(&TOTAL_SUPPLY_KEY).into()
+            U256::from_big_endian(&pwasm_ethereum::read(&TOTAL_SUPPLY_KEY))
         }
     }
 }
