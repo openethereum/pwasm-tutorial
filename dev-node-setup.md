@@ -11,11 +11,14 @@ Wasm support isn't enabled by default and needs to be specified in a "chainspec"
     },
     "params": {
         "wasmActivationTransition": "0x01",
+        "eip658Transition": "0x01",
         "gasLimitBoundDivisor": "0x0400",
         "accountStartNonce": "0x0",
         "maximumExtraDataSize": "0x20",
         "minGasLimit": "0x1388",
-        "networkID" : "0x11"
+        "networkID" : "0x11",
+        "maxCodeSize": 1000000,
+        "maxCodeSizeTransition": 1
     },
     "genesis": {
         "seal": {
@@ -26,7 +29,7 @@ Wasm support isn't enabled by default and needs to be specified in a "chainspec"
         "timestamp": "0x00",
         "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "extraData": "0x",
-        "gasLimit": "0x5B8D80"
+        "gasLimit": "0x5B8D8000"
     },
     "accounts": {
         "0000000000000000000000000000000000000001": { "balance": "1", "builtin": { "name": "ecrecover", "pricing": { "linear": { "base": 3000, "word": 0 } } } },
