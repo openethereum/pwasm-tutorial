@@ -18,7 +18,8 @@ pub mod token {
     use pwasm_abi_derive::eth_abi;
 
     lazy_static! {
-        static ref TOTAL_SUPPLY_KEY: H256 = { H256::from([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])};
+        static ref TOTAL_SUPPLY_KEY: H256 =
+            H256::from([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
     }
 
     #[eth_abi(TokenEndpoint, TokenClient)]
@@ -80,7 +81,7 @@ pub mod token {
     // Used to map balances with their owners.
     fn balance_key(address: &Address) -> H256 {
         let mut key = H256::from(*address);
-        key.as_bytes_mut()[0] = 1; // just a naiive "namespace";
+        key.as_bytes_mut()[0] = 1; // just a naive "namespace";
         key
     }
 }

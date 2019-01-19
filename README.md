@@ -116,14 +116,15 @@ Let's implement a simple [ERC-20](https://en.wikipedia.org/wiki/ERC20) token con
 
 pub mod token {
     use pwasm_ethereum;
-    use pwasm_std::*;
-    use pwasm_std::hash::H256;
-    use bigint::U256;
+    use pwasm_abi::types::*;
 
     // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
 
-    static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    lazy_static! {
+        static ref TOTAL_SUPPLY_KEY: H256 =
+            H256::from([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    }
 
     #[eth_abi(TokenEndpoint)]
     pub trait TokenInterface {
@@ -278,6 +279,9 @@ Let's implement the `transfer` method for our ERC-20 contract. `step-4` director
 ```rust
 pub mod token {
 
+    use pwasm_ethereum;
+    use pwasm_std::types::*;
+
     #[eth_abi(TokenEndpoint, TokenClient)]
     pub trait TokenInterface {
         /// The constructor
@@ -335,8 +339,8 @@ pub mod token {
     // Generates a balance key for some address.
     // Used to map balances with their owners.
     fn balance_key(address: &Address) -> H256 {
-        let mut key = H256::from(address);
-        key[0] = 1; // just a naive "namespace";
+        let mut key = H256::from(*address);
+        key.as_bytes_mut()[0] = 1; // just a naive "namespace";
         key
     }
 }

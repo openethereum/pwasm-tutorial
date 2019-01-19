@@ -85,7 +85,7 @@ pub mod token {
     // Used to map balances with their owners.
     fn balance_key(address: &Address) -> H256 {
         let mut key = H256::from(*address);
-        key.as_bytes_mut()[0] = 1; // just a naiive "namespace";
+        key.as_bytes_mut()[0] = 1; // just a naive "namespace";
         key
     }
 }
