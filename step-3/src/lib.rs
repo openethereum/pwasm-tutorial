@@ -1,5 +1,6 @@
 #![no_std]
 #![allow(non_snake_case)]
+#![feature(proc_macro_hygiene)]
 
 extern crate pwasm_std;
 extern crate pwasm_ethereum;

@@ -1,5 +1,6 @@
 #![no_std]
 #![allow(non_snake_case)]
+#![feature(proc_macro_hygiene)]
 
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
@@ -78,8 +79,8 @@ pub mod token {
     // Generates a balance key for some address.
     // Used to map balances with their owners.
     fn balance_key(address: &Address) -> H256 {
-        let mut key = H256::from_slice(address.as_bytes());
-        key.as_bytes_mut()[0] = 1u8; // just a naiive "namespace";
+        let mut key = H256::from(*address);
+        key.as_bytes_mut()[0] = 1; // just a naiive "namespace";
         key
     }
 }

@@ -7,7 +7,7 @@ authors = ["Alexey Frolov <alexey@parity.io>"]
 pwasm-std = "0.13"
 pwasm-ethereum = "0.8"
 pwasm-abi = "0.2"
-pwasm-abi-derive = { git = "https://github.com/paritytech/pwasm-abi.git" }
+pwasm-abi-derive = "0.2"
 lazy_static = { version = "1.2.0", features = ["spin_no_std"] }
 
 [dev-dependencies.pwasm-test]

@@ -1,7 +1,6 @@
 #![no_std]
 #![allow(non_snake_case)]
-#![feature(use_extern_macros)]
-#![feature(proc_macro_gen)]
+#![feature(proc_macro_hygiene)]
 
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
@@ -15,8 +14,12 @@ pub mod token {
     // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
 
-    static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
-    static OWNER_KEY: H256 = H256([3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    lazy_static::lazy_static! {
+        static ref TOTAL_SUPPLY_KEY: H256 =
+            H256::from([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+        static ref OWNER_KEY: H256 =
+            H256::from([3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    }
 
     #[eth_abi(TokenEndpoint, TokenClient)]
     pub trait TokenInterface {
@@ -81,8 +84,8 @@ pub mod token {
     // Generates a balance key for some address.
     // Used to map balances with their owners.
     fn balance_key(address: &Address) -> H256 {
-        let mut key = H256::from(address);
-        key[0] = 1; // just a naiive "namespace";
+        let mut key = H256::from(*address);
+        key.as_bytes_mut()[0] = 1; // just a naiive "namespace";
         key
     }
 }
@@ -108,6 +111,7 @@ mod tests {
     extern crate pwasm_test;
     extern crate std;
     use super::*;
+    use core::str::FromStr;
     use pwasm_abi::types::*;
     use self::pwasm_test::{ext_reset, ext_get};
     use token::TokenInterface;
@@ -115,8 +119,8 @@ mod tests {
     #[test]
     fn should_succeed_transfering_1000_from_owner_to_another_address() {
         let mut contract = token::TokenContract{};
-        let owner_address = Address::from("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
-        let sam_address = Address::from("0xdb6fd484cfa46eeeb73c71edee823e4812f9e2e1");
+        let owner_address = Address::from_str("ea674fdde714fd979de3edf0f56aa9716b898ec8").unwrap();
+        let sam_address = Address::from_str("db6fd484cfa46eeeb73c71edee823e4812f9e2e1").unwrap();
         // Here we're creating an External context using ExternalBuilder and set the `sender` to the `owner_address`
         // so `pwasm_ethereum::sender()` in TokenInterface::constructor() will return that `owner_address`
         ext_reset(|e| e.sender(owner_address.clone()));
@@ -133,7 +137,7 @@ mod tests {
     #[test]
     fn should_not_transfer_to_self() {
         let mut contract = token::TokenContract{};
-        let owner_address = Address::from("0xea674fdde714fd979de3edf0f56aa9716b898ec8");
+        let owner_address = Address::from_str("ea674fdde714fd979de3edf0f56aa9716b898ec8").unwrap();
         ext_reset(|e| e.sender(owner_address.clone()));
         let total_supply = 10000.into();
         contract.constructor(total_supply);
