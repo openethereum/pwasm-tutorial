@@ -1,23 +1,25 @@
 #![no_std]
 #![allow(non_snake_case)]
-#![feature(alloc)]
-#![feature(use_extern_macros)]
-#![feature(proc_macro_gen)]
+#![feature(proc_macro_hygiene)]
 
 extern crate pwasm_std;
 extern crate pwasm_ethereum;
 extern crate pwasm_abi;
 extern crate pwasm_abi_derive;
-/// Bigint used for 256-bit arithmetic
+
+#[macro_use]
+extern crate lazy_static;
 
 pub mod token {
     use pwasm_ethereum;
-    use pwasm_abi::types::*;
+    use pwasm_std::types::*;
 
     // eth_abi is a procedural macros https://doc.rust-lang.org/book/first-edition/procedural-macros.html
     use pwasm_abi_derive::eth_abi;
 
-    static TOTAL_SUPPLY_KEY: H256 = H256([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
+    lazy_static! {
+        static ref TOTAL_SUPPLY_KEY: H256 = { H256::from([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])};
+    }
 
     #[eth_abi(TokenEndpoint)]
     pub trait TokenInterface {
