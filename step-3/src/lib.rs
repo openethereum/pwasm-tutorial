@@ -18,7 +18,10 @@ pub mod token {
     use pwasm_abi_derive::eth_abi;
 
     lazy_static! {
-        static ref TOTAL_SUPPLY_KEY: H256 = { H256::from([2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])};
+        static ref TOTAL_SUPPLY_KEY: H256 =
+            H256::from(
+                [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            );
     }
 
     #[eth_abi(TokenEndpoint, TokenClient)]
